@@ -1,0 +1,425 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Flow</title>
+<style>
+*{box-sizing:border-box;margin:0}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fa;--cb:#fff;--o:.8;--bl:18px;--cd:color-mix(in srgb,var(--cb) calc(var(--o)*100%),transparent);--tx:#1c1e2b;--mu:#7b8096;--ln:#0000001a;--ac:#7c5cff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1016;--cb:#181b25;--tx:#e8eaf3;--mu:#8a90a8;--ln:#ffffff1f}}
+:root[data-theme="dark"]{--bg:#0e1016;--cb:#181b25;--tx:#e8eaf3;--mu:#8a90a8;--ln:#ffffff1f}
+body{font:15px/1.5 system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans JP",sans-serif;background:var(--bg) center/cover fixed;color:var(--tx)}
+main{max-width:980px;margin:auto;padding:14px}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:4px;overflow-x:auto;padding:8px 10px;background:var(--cd);backdrop-filter:blur(14px);border-bottom:1px solid var(--ln)}
+.nav button{white-space:nowrap}
+button,input,select,textarea{font:inherit;color:inherit;background:transparent;border:1px solid var(--ln);border-radius:10px;padding:6px 10px}
+input,select,textarea{background:color-mix(in srgb,var(--cd) 70%,transparent);min-width:0}
+input[type=color]{padding:0;width:38px;height:34px}
+textarea{width:100%;min-height:70px}
+button{cursor:pointer;transition:.2s}button:hover{transform:translateY(-1px);border-color:var(--ac)}
+.nav .on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--cd);backdrop-filter:blur(12px);border:1px solid var(--ln);border-radius:16px;padding:14px;margin:10px 0;animation:up .35s both}
+@keyframes up{from{opacity:0;transform:translateY(10px)}}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0}.between{justify-content:space-between}
+.mu,small{color:var(--mu)}.gr{flex:1;cursor:pointer;min-width:100px}
+.big{font-size:clamp(40px,10vw,72px);font-weight:200;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:9px;background:var(--ln);overflow:hidden}.bar i{display:block;height:100%;background:var(--ac);transition:width .6s}
+.ck{width:24px;height:24px;border-radius:50%;padding:0;line-height:1}.ck.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pd{width:10px;height:10px;border-radius:50%}
+.chip{border:1px solid var(--c);background:color-mix(in srgb,var(--c) 18%,transparent);border-radius:99px;padding:1px 9px;font-size:13px}
+.tg{cursor:pointer;opacity:.45}.tg.on{opacity:1}
+.pc.on{background:var(--c);color:#fff;border-color:var(--c)}
+.dn .gr{text-decoration:line-through;opacity:.55}.sd{text-decoration:line-through;opacity:.55}
+.dt{border-top:1px dashed var(--ln);margin-top:8px;padding-top:6px;animation:up .25s both}
+.dt h5{margin:10px 0 4px;color:var(--mu)}
+.yg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 12px}
+.mg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:6px}
+.d{padding:4px 0;border-radius:8px;border:0;font-size:13px}.d.has{box-shadow:inset 0 -3px var(--ac)}.d.now{background:var(--ac);color:#fff}
+.strip{display:flex;gap:2px;margin-top:6px}.strip u{flex:1;height:10px;border-radius:3px;background:var(--ln)}.strip u.on{background:var(--ac)}
+.x{border:0;padding:2px 8px}a{color:var(--ac);cursor:pointer}
+html{-webkit-tap-highlight-color:transparent}button,input,select{touch-action:manipulation}
+body{background-image:radial-gradient(60vmax 60vmax at 12% 8%,color-mix(in srgb,var(--ac) 50%,transparent),transparent 60%),radial-gradient(50vmax 50vmax at 92% 85%,#22d3ee55,transparent 60%),radial-gradient(40vmax 40vmax at 75% 0,#f472b655,transparent 60%)}
+#bgv{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1}
+.card,.nav{background:linear-gradient(135deg,#ffffff30,#ffffff08),var(--cd);backdrop-filter:blur(var(--bl)) saturate(1.8);-webkit-backdrop-filter:blur(var(--bl)) saturate(1.8);border:1px solid #ffffff3d;box-shadow:inset 0 1px 0 #ffffff59,0 10px 34px #00000020;border-radius:22px}
+.noa .card{animation:none}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.nav{top:calc(env(safe-area-inset-top,0px) + 8px);margin:8px auto;width:max-content;max-width:calc(100% - 16px);padding:6px;gap:2px;border-radius:99px;scrollbar-width:none}
+.nav button{border:0;display:flex;align-items:center;gap:6px;border-radius:99px;padding:8px 12px}
+.hg{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:0 14px}.w2{grid-column:1/-1}
+.kb{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.kc{flex:0 0 min(290px,82vw);scroll-snap-align:start;background:#ffffff14;border:1px solid #ffffff2e;border-radius:18px;padding:10px;min-height:140px}
+.kt{background:var(--cd);border:1px solid var(--ln);border-radius:14px;padding:8px 10px;margin-top:8px;cursor:grab}
+.d.oc{text-decoration:underline dotted}
+@media(max-width:720px){.nav{position:fixed;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);left:10px;right:10px;width:auto;max-width:none;margin:0;justify-content:space-around}.nav span{display:none}.nav .on span{display:inline;font-size:12px}main{padding:10px 10px 110px}input,select,textarea{font-size:16px}.yg{grid-template-columns:1fr}.big{font-size:44px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#gb{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);inset-inline-end:10px;z-index:7;padding:2px 9px;border-radius:99px;font-size:12px;border:1px solid #ffffff3d;background:var(--cd);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:.85}
+#gb:hover{opacity:1}
+#gb.bad{border-color:#ef4444;color:#ef4444}
+.noa .dt{animation:none}
+#gb{cursor:pointer}
+</style></head><body><div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),p=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),T0=()=>ymd(new Date()),uid=()=>Math.random().toString(36).slice(2,10),
+esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const L={home:'Home|خانه|ホーム',cal:'Calendar|تقویم|カレンダー',habits:'Habits|عادت‌ها|習慣',archive:'Archive|آرشیو|アーカイブ',graph:'Graphs|گراف|グラフ',journal:'Journal|ژورنال|日記',set:'Settings|تنظیمات|設定',today:'Today|امروز|今日',done:'Done|انجام‌شده|完了',pending:'Pending|مانده|未完了',overdue:'Overdue|عقب‌افتاده|期限超過',total:'Total|کل|合計',open:'Open|باز کردن|開く',occ:'Occasions|مناسبت‌ها|記念日',addtask:'New task… (Enter)|تسک جدید… (Enter)|新しいタスク… (Enter)',tags:'Tags|تگ‌ها|タグ',tname:'Tag name|نام تگ|タグ名',prio:'Priority|اولویت|優先度',p0:'Urgent|فوری|緊急',p1:'High|بالا|高',p2:'Normal|عادی|通常',p3:'Low|پایین|低',due:'Deadline|ددلاین|締切',status:'Status|وضعیت|状態',sub:'Subtasks|ساب‌تسک|サブタスク',addsub:'Add subtask…|افزودن ساب‌تسک…|サブタスク追加…',fields:'Key fields|فیلدها|フィールド',key:'Key|کلید|項目',val:'Value|مقدار|値',note:'Notes|یادداشت|メモ',files:'Files|فایل‌ها|ファイル',created:'Created|ایجاد|作成',doneat:'Completed|انجام|完了日時',search:'Search text or date…|جست‌وجو (متن یا تاریخ)…|検索(文字・日付)…',all:'All|همه|すべて',undone:'Not done|انجام‌نشده|未完了',from:'From|از|から',to:'To|تا|まで',group:'Group|گروه‌بندی|グループ',date:'Date|تاریخ|日付',good:'Good|خوب|良い',bad:'Bad|بد|悪い',addh:'New habit… (Enter)|عادت جدید… (Enter)|新しい習慣… (Enter)',summary:'Month summary|خلاصه ماه|月間まとめ',lang:'Language|زبان|言語',theme:'Theme|پوسته|テーマ',color:'Accent color|رنگ اصلی|アクセント色',bg:'Background (image/GIF)|پس‌زمینه (عکس/گیف)|背景(画像/GIF)',clear:'Clear|حذف|削除',statuses:'Statuses (comma-separated, last = done)|وضعیت‌ها (با ویرگول، آخری = انجام شد)|状態(カンマ区切り、最後=完了)',export:'Export|خروجی|エクスポート',import:'Import|ورودی|インポート',d:'Day|روز|日',w:'Week|هفته|週',m:'Month|ماه|月',local:'All data is stored locally in this browser (IndexedDB).|همه داده‌ها محلی در همین مرورگر ذخیره می‌شوند.|データはこのブラウザ内に保存されます。',jph:'Write about your day…|درباره روزت بنویس…|今日のことを書こう…'};
+const LI={en:0,fa:1,ja:2},LOC={en:'en-US',fa:'fa-u-ca-gregory',ja:'ja-JP'};
+let S={tasks:[],tags:[],habits:[],hlog:{},journal:{},set:{lang:'en',ac:'#7c5cff',theme:'auto',st:['To do','In progress','Blocked','Done']}},BG='';
+let V={tab:'home',y:new Date().getFullYear(),date:T0(),open:null,hd:T0(),ht:'good',gr:'w',f:{q:'',tag:'',st:'',ds:'',from:'',to:'',g:'date'}};
+const t=k=>(L[k]||k).split('|')[LI[S.set.lang]]||k,lc=()=>LOC[S.set.lang],ot=s=>s.split('|')[LI[S.set.lang]];
+const OC={'01-01':'New Year|سال نو میلادی|元日','02-14':"Valentine's Day|روز ولنتاین|バレンタイン",'03-20':'Nowruz (approx.)|نوروز (تقریبی)|ノウルーズ','12-25':'Christmas|کریسمس|クリスマス'};
+const EM={work:'💼',کار:'💼',仕事:'💼',study:'📚',درس:'📚',勉強:'📚',health:'💪',سلامت:'💪',健康:'💪',home:'🏠',خانه:'🏠',家:'🏠',shop:'🛒',خرید:'🛒',買:'🛒',money:'💰',پول:'💰',金:'💰',idea:'💡',ایده:'💡',code:'💻',برنامه:'💻',urgent:'🔥',مهم:'⭐',meet:'👥',جلسه:'👥',会議:'👥',travel:'✈️',سفر:'✈️',旅:'✈️',food:'🍽️',غذا:'🍽️',sport:'🏃',ورزش:'🏃',運動:'🏃',read:'📖',مطالعه:'📖',読:'📖',call:'📞',تماس:'📞',sleep:'😴',خواب:'😴',water:'💧',آب:'💧',robot:'🤖',ربات:'🤖',circuit:'🔌',مدار:'🔌'};
+const emo=n=>{n=n.toLowerCase();for(const k in EM)if(n.includes(k))return EM[k];return'🏷️'};
+const P=[['',"#ef4444"],['',"#f59e0b"],['',"#3b82f6"],['',"#94a3b8"]];
+const idb=new Promise(r=>{try{const q=indexedDB.open('flow',1);q.onupgradeneeded=()=>q.result.createObjectStore('k');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch{r(null)}});
+const kv=(m,k,v)=>idb.then(d=>new Promise(r=>{if(!d)return r();try{const s=d.transaction('k',m==='get'?'readonly':'readwrite').objectStore('k'),q=m==='get'?s.get(k):s.put(v,k);q.onsuccess=()=>r(q.result);q.onerror=()=>r()}catch{r()}}));
+const save=()=>persist(),sv=()=>{persist();render()},task=id=>S.tasks.find(x=>x.id===id),tg=id=>S.tags.find(x=>x.id===id),
+chip=g=>`<span class="chip" style="--c:${g.color}">${g.emoji} ${esc(g.name)}</span>`,fmt=(ms,o)=>new Date(ms).toLocaleString(lc(),o);
+const hhmm=ms=>new Date(ms).toLocaleTimeString(lc(),{hour:'2-digit',minute:'2-digit'});
+
+function vCal(){const cnt={};S.tasks.forEach(x=>cnt[x.date]=1);let h=`<div class="row between"><button data-a="yr" data-v="-1">‹</button><h2>${V.y}</h2><button data-a="yr" data-v="1">›</button></div><div class="yg">`;
+for(let m=0;m<12;m++){const f=new Date(V.y,m,1),dm=new Date(V.y,m+1,0).getDate();h+=`<div class="card"><b>${f.toLocaleDateString(lc(),{month:'long'})}</b><div class="mg">`+'<span></span>'.repeat(f.getDay());
+for(let d=1;d<=dm;d++){const k=V.y+'-'+p(m+1)+'-'+p(d);h+=`<button class="d${k===T0()?' now':''}${cnt[k]?' has':''}${OC[k.slice(5)]?' oc':''}" title="${OC[k.slice(5)]?esc(ot(OC[k.slice(5)])):''}" data-a="day" data-v="${k}">${d}</button>`}h+='</div></div>'}return h+'</div>'}
+function row(k){const o=V.open===k.id;return`<div class="card${k.done?' dn':''}"><div class="row"><button class="ck${k.done?' on':''}" data-a="tog" data-i="${k.id}">${k.done?'✓':''}</button><span class="pd" style="background:${P[k.prio][1]}"></span><b class="gr" data-a="open" data-i="${k.id}">${esc(k.title)}</b>${k.tags.map(tg).filter(Boolean).map(chip).join('')}${k.due?`<small>⏰ ${k.due.replace('T',' ')}</small>`:''}${k.done?`<small>✔ ${hhmm(k.doneAt)}</small>`:''}<small>${esc(k.status)}</small></div>${o?detail(k):''}</div>`}
+function detail(k){const i=`data-i="${k.id}"`;return`<div class="dt"><input data-c="title" ${i} value="${esc(k.title)}" style="width:100%">
+<div class="row"><small>${t('prio')}</small>${P.map((q,j)=>`<button class="pc${k.prio===j?' on':''}" style="--c:${q[1]}" data-a="prio" ${i} data-v="${j}">${t('p'+j)}</button>`).join('')}</div>
+<div class="row"><small>${t('due')}</small><input type="datetime-local" data-c="due" ${i} value="${k.due}"><small>${t('status')}</small><select data-c="status" ${i}>${S.set.st.map(s=>`<option${s===k.status?' selected':''}>${esc(s)}</option>`).join('')}</select></div>
+<div class="row"><small>${t('tags')}</small>${S.tags.map(g=>`<span class="chip tg${k.tags.includes(g.id)?' on':''}" style="--c:${g.color}" data-a="tagtog" ${i} data-v="${g.id}">${g.emoji} ${esc(g.name)}</span>`).join('')}</div>
+<h5>${t('sub')}</h5>${k.sub.map((s,j)=>`<div class="row"><button class="ck${s.d?' on':''}" data-a="subtog" ${i} data-v="${j}">${s.d?'✓':''}</button><span class="gr${s.d?' sd':''}">${esc(s.t)}</span><button class="x" data-a="subdel" ${i} data-v="${j}">×</button></div>`).join('')}<input data-k="sub" ${i} placeholder="${t('addsub')}" style="width:100%">
+<h5>${t('fields')}</h5>${k.fields.map((f,j)=>`<div class="row"><input data-c="fk" ${i} data-j="${j}" value="${esc(f.k)}" placeholder="${t('key')}"><input data-c="fv" ${i} data-j="${j}" value="${esc(f.v)}" placeholder="${t('val')}"><button class="x" data-a="fdel" ${i} data-v="${j}">×</button></div>`).join('')}<button data-a="fadd" ${i}>＋</button>
+<h5>${t('note')}</h5><textarea data-c="note" ${i}>${esc(k.note)}</textarea>
+<h5>${t('files')}</h5>${k.files.map((f,j)=>`<div class="row"><a data-a="fdl" ${i} data-v="${j}">📎 ${esc(f.n)}</a><button class="x" data-a="fxdel" ${i} data-v="${j}">×</button></div>`).join('')}<input type="file" multiple data-c="file" ${i}>
+<div class="row between"><small>${t('created')}: ${fmt(k.created)}${k.doneAt?' · '+t('doneat')+': '+fmt(k.doneAt):''}</small><button data-a="del" ${i}>🗑</button></div></div>`}
+function vDay(){const d=V.date,all=S.tasks.filter(x=>x.date===d),pe=all.filter(x=>!x.done),dn=all.filter(x=>x.done).sort((a,b)=>a.doneAt-b.doneAt),od=pe.filter(x=>x.due&&new Date(x.due)<new Date()).length,st=S.set.st.map(s=>[s,all.filter(x=>x.status===s).length]).filter(x=>x[1]),oc=OC[d.slice(5)],cl=['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#14b8a6'][S.tags.length%7];
+return`<div class="card"><div class="row between"><button data-a="dd" data-v="-1">‹</button><h2>${new Date(d+'T00:00').toLocaleDateString(lc(),{dateStyle:'full'})}</h2><button data-a="dd" data-v="1">›</button></div>${oc?`<small>🎉 ${ot(oc)}</small>`:''}
+<div class="row"><span class="chip" style="--c:#3b82f6">${t('total')} ${all.length}</span><span class="chip" style="--c:#22c55e">${t('done')} ${dn.length}</span><span class="chip" style="--c:#f59e0b">${t('pending')} ${pe.length}</span><span class="chip" style="--c:#ef4444">${t('overdue')} ${od}</span>${st.map(s=>`<span class="chip" style="--c:#8b5cf6">${esc(s[0])} ${s[1]}</span>`).join('')}</div><div class="bar"><i style="width:${all.length?dn.length/all.length*100:0}%"></i></div></div>
+<div class="card"><div class="row"><b>${t('tags')}</b>${S.tags.map(g=>chip(g)+`<button class="x" data-a="tagdel" data-v="${g.id}">×</button>`).join('')}</div><div class="row"><input id="te" style="width:56px;text-align:center" placeholder="😀"><input id="tn" data-k="tag" placeholder="${t('tname')}"><input id="tc" type="color" value="${cl}"><button data-a="tagadd">＋</button></div></div>
+<input data-k="task" placeholder="${t('addtask')}" style="width:100%;padding:10px">${pe.map(row).join('')}${dn.length?`<h4 style="margin-top:14px">✔ ${t('done')}</h4>`+dn.map(row).join(''):''}`}
+function vHabits(){const d=V.hd,mo=d.slice(0,7),dm=new Date(+d.slice(0,4),+d.slice(5,7),0).getDate(),cnt=h=>{let c=0;for(let i=1;i<=dm;i++)if(S.hlog[mo+'-'+p(i)]?.[h.id])c++;return c};
+const hr=h=>{const c=cnt(h),bad=h.type==='bad';return`<div class="card"><div class="row"><button class="ck${S.hlog[d]?.[h.id]?' on':''}" data-a="hab" data-i="${h.id}">✓</button><b class="gr">${h.emoji} ${esc(h.name)}</b><small>${c}/${dm}</small><button class="x" data-a="habdel" data-i="${h.id}">×</button></div><div class="bar"><i style="width:${c/dm*100}%;background:${bad?'#ef4444':'#22c55e'}"></i></div><div class="strip">${Array.from({length:dm},(_,i)=>`<u class="${S.hlog[mo+'-'+p(i+1)]?.[h.id]?'on':''}"></u>`).join('')}</div></div>`};
+const G=S.habits.filter(h=>h.type!=='bad'),B=S.habits.filter(h=>h.type==='bad'),gr=G.length?Math.round(G.reduce((a,h)=>a+cnt(h)/dm,0)/G.length*100):0,bc=B.reduce((a,h)=>a+cnt(h),0);
+return`<div class="card"><div class="row"><input type="date" data-c="hd" value="${d}"><select id="ht" data-c="ht"><option value="good"${V.ht==='good'?' selected':''}>${t('good')}</option><option value="bad"${V.ht==='bad'?' selected':''}>${t('bad')}</option></select><input data-k="hab" placeholder="${t('addh')}" style="flex:1"></div></div>
+<div class="card"><b>${t('summary')}</b><div class="row"><span class="chip" style="--c:#22c55e">${t('good')} ${gr}%</span><span class="chip" style="--c:#ef4444">${t('bad')} ×${bc}</span></div></div>
+<h4>${t('good')}</h4>${G.map(hr).join('')}<h4>${t('bad')}</h4>${B.map(hr).join('')}`}
+function vArchive(){const f=V.f,q=f.q.toLowerCase(),r=S.tasks.filter(x=>(!q||(x.title+x.note+x.date+(x.doneAt?ymd(new Date(x.doneAt)):'')+x.fields.map(y=>y.k+y.v).join()+x.sub.map(y=>y.t).join()).toLowerCase().includes(q))&&(!f.tag||x.tags.includes(f.tag))&&(!f.st||x.status===f.st)&&(!f.ds||(f.ds==='d')===!!x.done)&&(!f.from||x.date>=f.from)&&(!f.to||x.date<=f.to)).sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created),g={};
+r.forEach(x=>{const ks=f.g==='date'?[x.date]:f.g==='status'?[x.status]:x.tags.length?x.tags.map(i=>tg(i)?.emoji+' '+tg(i)?.name):['—'];ks.forEach(k=>(g[k]=g[k]||[]).push(x))});
+const sel=(k,o)=>`<select data-c="flt" data-v="${k}">${o}</select>`,op=(v,l,c)=>`<option value="${v}"${c==v?' selected':''}>${esc(l)}</option>`;
+return`<div class="card"><div class="row"><input data-c="flt" data-v="q" value="${esc(f.q)}" placeholder="${t('search')}" style="flex:1">${sel('tag',op('',t('tags'),f.tag)+S.tags.map(x=>op(x.id,x.emoji+' '+x.name,f.tag)).join(''))}${sel('st',op('',t('status'),f.st)+S.set.st.map(x=>op(x,x,f.st)).join(''))}${sel('ds',op('',t('all'),f.ds)+op('d',t('done'),f.ds)+op('u',t('undone'),f.ds))}</div>
+<div class="row"><small>${t('from')}</small><input type="date" data-c="flt" data-v="from" value="${f.from}"><small>${t('to')}</small><input type="date" data-c="flt" data-v="to" value="${f.to}">${sel('g',op('date',t('date'),f.g)+op('tag',t('tags'),f.g)+op('status',t('status'),f.g))}<small>${r.length}</small></div></div>`+
+Object.keys(g).sort().reverse().map(k=>`<div class="card"><b>${esc(k)}</b>`+g[k].map(x=>`<div class="row" style="cursor:pointer" data-a="day" data-v="${x.date}"><span class="pd" style="background:${P[x.prio][1]}"></span><span class="gr${x.done?' sd':''}">${esc(x.title)}</span>${x.tags.map(tg).filter(Boolean).map(chip).join('')}<small>${esc(x.status)} · ${x.date}${x.doneAt?' · ✔ '+fmt(x.doneAt):''}</small></div>`).join('')+'</div>').join('')}
+function vGraph(){const d=new Date(V.date+'T00:00'),r=V.gr,b=[];
+if(r==='d')for(let h=0;h<24;h++)b.push([h,S.tasks.filter(x=>x.doneAt&&ymd(new Date(x.doneAt))===V.date&&new Date(x.doneAt).getHours()===h).length,0]);
+else{const n=r==='w'?7:new Date(d.getFullYear(),d.getMonth()+1,0).getDate();for(let i=0;i<n;i++){const x=r==='w'?new Date(d.getFullYear(),d.getMonth(),d.getDate()-6+i):new Date(d.getFullYear(),d.getMonth(),i+1),ts=S.tasks.filter(y=>y.date===ymd(x));b.push([x.getDate(),ts.filter(y=>y.done).length,ts.length])}}
+const mx=Math.max(1,...b.map(x=>Math.max(x[1],x[2]))),dn=b.reduce((a,x)=>a+x[1],0),tt=b.reduce((a,x)=>a+x[2],0);
+return`<div class="card"><div class="row">${['d','w','m'].map(x=>`<button class="${r===x?'on':''}" style="${r===x?'background:var(--ac);color:#fff':''}" data-a="gr" data-v="${x}">${t(x)}</button>`).join('')}<input type="date" data-c="gd" value="${V.date}"></div>
+<svg viewBox="0 0 ${b.length*26} 150" style="width:100%">${b.map((x,i)=>`<rect x="${i*26+3}" y="${120-x[2]/mx*100}" width="20" height="${x[2]/mx*100}" rx="4" fill="var(--ln)"/><rect x="${i*26+3}" y="${120-x[1]/mx*100}" width="20" height="${x[1]/mx*100}" rx="4" fill="var(--ac)"><title>${x[1]}/${x[2]}</title></rect><text x="${i*26+13}" y="138" font-size="10" text-anchor="middle" fill="var(--mu)">${x[0]}</text>`).join('')}</svg>
+<div class="row"><span class="chip" style="--c:#22c55e">${t('done')} ${dn}</span>${r!=='d'?`<span class="chip" style="--c:#3b82f6">${t('total')} ${tt} (${tt?Math.round(dn/tt*100):0}%)</span>`:''}</div></div>`}
+function vJournal(){const ks=Object.keys(S.journal).filter(k=>S.journal[k]).sort().reverse().slice(0,30);
+return`<div class="card"><div class="row"><input type="date" data-c="jd" value="${V.date}"></div><textarea data-c="jn" style="min-height:240px" placeholder="${t('jph')}">${esc(S.journal[V.date]||'')}</textarea></div>${ks.map(k=>`<div class="card" style="cursor:pointer" data-a="jd" data-v="${k}"><b>${k}</b><div class="mu">${esc(S.journal[k].slice(0,120))}</div></div>`).join('')}`}
+const tick=()=>{const c=$('#clk');if(c)c.textContent=new Date().toLocaleTimeString(lc())};
+const A={nav:e=>{V.tab=e.dataset.v;render()},day:e=>{V.date=e.dataset.v;V.tab='day';V.open=null;render()},yr:e=>{V.y+=+e.dataset.v;render()},
+dd:e=>{const q=V.date;V.date=ymd(new Date(+q.slice(0,4),+q.slice(5,7)-1,+q.slice(8)+ +e.dataset.v));render()},
+tog:e=>{const k=task(e.dataset.i),L_=S.set.st[S.set.st.length-1];k.done=!k.done;k.doneAt=k.done?Date.now():null;if(k.done)k.status=L_;else if(k.status===L_)k.status=S.set.st[0];sv()},
+open:e=>{V.open=V.open===e.dataset.i?null:e.dataset.i;render()},prio:e=>{task(e.dataset.i).prio=+e.dataset.v;sv()},
+tagtog:e=>{const k=task(e.dataset.i),v=e.dataset.v,j=k.tags.indexOf(v);j<0?k.tags.push(v):k.tags.splice(j,1);sv()},
+subtog:e=>{const s=task(e.dataset.i).sub[e.dataset.v];s.d=!s.d;sv()},subdel:e=>{task(e.dataset.i).sub.splice(e.dataset.v,1);sv()},
+fadd:e=>{task(e.dataset.i).fields.push({k:'',v:''});sv()},fdel:e=>{task(e.dataset.i).fields.splice(e.dataset.v,1);sv()},
+fxdel:e=>{const k=task(e.dataset.i);kv('put','f:'+k.files[e.dataset.v].id,'');k.files.splice(e.dataset.v,1);sv()},
+fdl:e=>{const f=task(e.dataset.i).files[e.dataset.v];kv('get','f:'+f.id).then(u=>{if(!u)return;const a=document.createElement('a');a.href=u;a.download=f.n;a.click()})},
+del:e=>{S.tasks=S.tasks.filter(x=>x.id!==e.dataset.i);V.open=null;sv()},
+tagadd:()=>{const n=$('#tn').value.trim();if(!n)return;S.tags.push({id:uid(),name:n,emoji:$('#te').value.trim()||emo(n),color:$('#tc').value});sv()},
+tagdel:e=>{S.tags=S.tags.filter(x=>x.id!==e.dataset.v);S.tasks.forEach(k=>k.tags=k.tags.filter(i=>i!==e.dataset.v));sv()},
+hab:e=>{const l=S.hlog[V.hd]=S.hlog[V.hd]||{};l[e.dataset.i]=!l[e.dataset.i];sv()},habdel:e=>{S.habits=S.habits.filter(x=>x.id!==e.dataset.i);sv()},
+gr:e=>{V.gr=e.dataset.v;render()},lang:e=>{S.set.lang=e.dataset.v;sv()},jd:e=>{V.date=e.dataset.v;V.tab='journal';render()},
+clrbg:()=>{BG='';kv('put','bg','');render()},exp:()=>{$('#io').value=JSON.stringify(S)},imp:()=>{try{S=fix(JSON.parse($('#io').value));sv()}catch{}}};
+const C={title:(e,k)=>{k.title=e.value.trim()||k.title;sv()},due:(e,k)=>{k.due=e.value;sv()},note:(e,k)=>{k.note=e.value;save()},
+status:(e,k)=>{k.status=e.value;const dn=e.value===S.set.st[S.set.st.length-1];if(dn!==!!k.done){k.done=dn;k.doneAt=dn?Date.now():null}sv()},
+fk:(e,k)=>{k.fields[e.dataset.j].k=e.value;save()},fv:(e,k)=>{k.fields[e.dataset.j].v=e.value;save()},
+file:async(e,k)=>{for(const f of e.files){const u=await new Promise(o=>{const r=new FileReader;r.onload=()=>o(r.result);r.readAsDataURL(f)}),id=uid();await kv('put','f:'+id,u);k.files.push({id,n:f.name})}sv()},
+flt:e=>{V.f[e.dataset.v]=e.value;render()},hd:e=>{if(e.value){V.hd=e.value;render()}},ht:e=>{V.ht=e.value},gd:e=>{if(e.value){V.date=e.value;render()}},
+jn:e=>{S.journal[V.date]=e.value;save()},jd:e=>{if(e.value){V.date=e.value;render()}},theme:e=>{S.set.theme=e.value;sv()},ac:e=>{S.set.ac=e.value;sv()},
+st:e=>{const a=e.value.split(',').map(s=>s.trim()).filter(Boolean);if(a.length>1){S.set.st=a;sv()}},
+bgf:e=>{const f=e.files[0];if(!f)return;const r=new FileReader;r.onload=()=>{BG=r.result;kv('put','bg',BG);render()};r.readAsDataURL(f)}};
+const K={task:e=>{S.tasks.push({id:uid(),date:V.date,title:e.value.trim(),done:false,doneAt:null,created:Date.now(),status:S.set.st[0],prio:2,due:'',tags:[],sub:[],fields:[],note:'',files:[]});sv()},
+sub:e=>{task(e.dataset.i).sub.push({t:e.value.trim(),d:0});sv()},tag:()=>A.tagadd(),
+hab:e=>{S.habits.push({id:uid(),name:e.value.trim(),type:V.ht,emoji:emo(e.value)});sv()}};
+document.addEventListener('input',e=>{const el=e.target;if(el.id==='te')el.dataset.m=1;if(el.id==='tn'){const te=$('#te');if(te&&!te.dataset.m)te.value=emo(el.value)==='🏷️'?'':emo(el.value)}});
+Object.assign(L,{work:'Workspace|ورک‌اسپیس|ワークスペース',glass:'Glass opacity|شفافیت|透明度',blur:'Blur|بلور|ぼかし',folder:'Data folder|پوشه ذخیره داده|データフォルダ',pick:'Choose folder|انتخاب پوشه|フォルダ選択',reconn:'Reconnect data folder|اتصال مجدد پوشه داده|フォルダを再接続',foldern:'Auto-saves flow-db.json + files/ here and reloads from it on start.|داده‌ها و فایل‌ها خودکار اینجا ذخیره و هنگام شروع از همین‌جا بارگذاری می‌شوند.|データとファイルを自動保存し、起動時に読み込みます。',widgets:'Home widgets|ویجت‌های خانه|ホームウィジェット',uname:'Your name|نام شما|名前',week:'Last 7 days|۷ روز اخیر|直近7日',dead:'Upcoming deadlines|ددلاین‌های نزدیک|近い締切',habs:'Habits today|عادت‌های امروز|今日の習慣',stats:'Stats|آمار|統計',streak:'Streak|روز پیاپی|連続',rate:'Rate|نرخ انجام|達成率',clock:'Clock|ساعت|時計',scr:'Scratchpad|یادداشت سریع|メモ帳'});
+Object.assign(OC,{'03-14':'Pi Day|روز عدد پی|π の日','03-08':"Intl Women's Day|روز جهانی زن|国際女性デー",'03-22':'World Water Day|روز جهانی آب|世界水の日','04-22':'Earth Day|روز زمین|アースデー','04-23':'World Book Day|روز جهانی کتاب|世界本の日','05-01':'Labour Day|روز جهانی کارگر|メーデー','05-17':'World Telecom Day|روز جهانی ارتباطات|世界電気通信日','06-05':'World Environment Day|روز جهانی محیط زیست|世界環境デー','10-01':'Intl Music Day|روز جهانی موسیقی|国際音楽の日','10-05':"World Teachers' Day|روز جهانی معلم|世界教師デー",'10-24':'United Nations Day|روز سازمان ملل|国連デー','10-31':'Halloween|هالووین|ハロウィン','11-10':'World Science Day|روز جهانی علم|世界科学の日','12-10':'Human Rights Day|روز جهانی حقوق بشر|人権デー'});
+const HW0=['clock','today','week','stats','dead','habs','occ'],IC={home:'M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z',cal:'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4',habits:'M4 12a8 8 0 0113-6l3 3M20 4v5h-5M20 12a8 8 0 01-13 6l-3-3M4 20v-5h5',archive:'M3 4h18v4H3zM5 8v12h14V8M10 12h4',graph:'M4 20V10M10 20V4M16 20v-8M22 20H2',journal:'M6 3h12v18H6zM9 8h6M9 12h6',set:'M12 9a3 3 0 100 6 3 3 0 000-6zM12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2',work:'M3 4h5v16H3zM10 4h5v10h-5zM17 4h4v13h-4z'};
+const ic=n=>`<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="${IC[n]}"/></svg>`,
+setSt=(k,s)=>{k.status=s;const d=s===S.set.st[S.set.st.length-1];if(d!==!!k.done){k.done=d;k.doneAt=d?Date.now():null}},fmtT=()=>{const l=V.fl??1500;return p(l/60|0)+':'+p(l%60)},
+rd=f=>new Promise(o=>{const r=new FileReader;r.onload=()=>o(r.result);r.readAsDataURL(f)});
+function nav(){return'<nav class="nav">'+['home','cal','work','habits','archive','graph','journal','set'].map(x=>`<button class="${V.tab===x||(V.tab==='day'&&x==='cal')?'on':''}" data-a="nav" data-v="${x}">${ic(x)}<span>${t(x)}</span></button>`).join('')+'</nav>'}
+Object.assign(A,{
+adv:e=>{const a=S.set.st,k=task(e.dataset.i);setSt(k,a[Math.min(a.indexOf(k.status)+1,a.length-1)]);sv()},
+ft:()=>{V.fr=!V.fr;render()},fr:()=>{V.fr=0;V.fl=1500;render()},
+});
+Object.assign(C,{
+nm:e=>{S.set.name=e.value;sv()},op:e=>{S.set.op=+e.value;sv()},bl:e=>{S.set.bl=+e.value;sv()},wt:e=>{V.wt=e.value;render()},scr:e=>{S.scr=e.value;save()},
+hw:e=>{const a=new Set(S.set.hw||HW0);e.checked?a.add(e.dataset.v):a.delete(e.dataset.v);S.set.hw=[...a];sv()}});
+document.addEventListener('input',e=>{const c=e.target.dataset?.c,r=document.documentElement.style;if(c==='op')r.setProperty('--o',e.target.value/100);if(c==='bl')r.setProperty('--bl',e.target.value+'px')});
+document.addEventListener('dragstart',e=>{const k=e.target.closest?.('.kt');if(k)e.dataTransfer.setData('text/plain',k.dataset.id)});
+document.addEventListener('dragover',e=>{if(e.target.closest?.('.kc'))e.preventDefault()});
+document.addEventListener('drop',e=>{const c=e.target.closest?.('.kc');if(!c)return;e.preventDefault();const k=task(e.dataTransfer.getData('text/plain'));if(k){setSt(k,c.dataset.s);sv()}});
+setInterval(()=>{if(V.fr){V.fl=(V.fl??1500)-1;if(V.fl<=0){V.fr=0;V.fl=1500;S.pom=S.pom||{};S.pom[T0()]=(S.pom[T0()]||0)+1;sv()}const e=$('#ft');if(e)e.textContent=fmtT()}},1000);
+function vWork(){const f=V.wt||'',cols=S.set.st,ts=S.tasks.filter(x=>!f||x.tags.includes(f)),last=cols[cols.length-1];
+return`<div class="card"><div class="row"><b>${t('work')}</b><select data-c="wt"><option value="">${t('tags')}</option>${S.tags.map(g=>`<option value="${g.id}"${g.id===f?' selected':''}>${g.emoji} ${esc(g.name)}</option>`).join('')}</select><span class="gr"></span><span>🍅 ${S.pom?.[T0()]||0}</span><span id="ft" class="big" style="font-size:30px">${fmtT()}</span><button class="${V.fr?'on':''}" data-a="ft">${V.fr?'⏸':'▶'}</button><button data-a="fr">↺</button></div></div>
+<div class="kb">${cols.map(c=>{const a=ts.filter(x=>x.status===c).sort((x,y)=>y.date.localeCompare(x.date)).slice(0,c===last?30:200);return`<div class="kc" data-s="${esc(c)}"><b>${esc(c)} <small>${ts.filter(x=>x.status===c).length}</small></b>${a.map(x=>`<div class="kt" draggable="true" data-id="${x.id}" data-a="day" data-v="${x.date}"><div class="row"><span class="pd" style="background:${P[x.prio][1]}"></span><span class="gr">${esc(x.title)}</span>${c!==last?`<button class="x" data-a="adv" data-i="${x.id}">›</button>`:''}</div><div class="row">${x.tags.map(tg).filter(Boolean).map(chip).join('')}<small>${x.date}${x.due?' ⏰'+x.due.slice(5).replace('T',' '):''}</small></div></div>`).join('')}</div>`}).join('')}</div>`}
+function vHome(){const n=new Date(),k=T0(),ts=S.tasks.filter(x=>x.date===k),dn=ts.filter(x=>x.done).length,hw=S.set.hw||HW0,h=w=>hw.includes(w),ad=S.tasks.filter(x=>x.done).length,
+wk=[...Array(7)].map((_,i)=>{const a=S.tasks.filter(x=>x.date===ymd(new Date(n.getFullYear(),n.getMonth(),n.getDate()-6+i)));return[a.filter(x=>x.done).length,a.length]}),mx=Math.max(1,...wk.map(x=>x[1])),
+up=S.tasks.filter(x=>!x.done&&x.due).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,5),hs=S.habits.filter(x=>x.type!=='bad'),hd=hs.filter(x=>S.hlog[k]?.[x.id]).length,nx=[];let st=0;
+for(let i=0;i<400;i++){const d=ymd(new Date(n.getFullYear(),n.getMonth(),n.getDate()-i));if(S.tasks.some(x=>x.doneAt&&ymd(new Date(x.doneAt))===d))st++;else if(i)break}
+for(let i=0;i<120&&nx.length<4;i++){const d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+i),o=OC[p(d.getMonth()+1)+'-'+p(d.getDate())];if(o)nx.push([d,o])}
+return`<div class="hg">${h('clock')?`<div class="card w2"><div class="mu">${esc(S.set.name||'')}</div><div id="clk" class="big"></div><div class="mu">${n.toLocaleDateString(lc(),{dateStyle:'full'})}</div></div>`:''}
+${h('today')?`<div class="card"><div class="row between"><b>${t('today')} · ${dn}/${ts.length}</b><button data-a="day" data-v="${k}">${t('open')}</button></div><div class="bar"><i style="width:${ts.length?dn/ts.length*100:0}%"></i></div>${ts.filter(x=>!x.done).slice(0,6).map(x=>`<div class="row"><span class="pd" style="background:${P[x.prio][1]}"></span>${esc(x.title)}</div>`).join('')}</div>`:''}
+${h('week')?`<div class="card"><b>${t('week')}</b><svg viewBox="0 0 182 70" style="width:100%">${wk.map((x,i)=>`<rect x="${i*26}" y="${60-x[1]/mx*55}" width="20" height="${x[1]/mx*55}" rx="4" fill="var(--ln)"/><rect x="${i*26}" y="${60-x[0]/mx*55}" width="20" height="${x[0]/mx*55}" rx="4" fill="var(--ac)"/>`).join('')}</svg></div>`:''}
+${h('stats')?`<div class="card"><b>${t('stats')}</b><div class="row"><span class="chip" style="--c:#22c55e">${t('done')} ${ad}</span><span class="chip" style="--c:#3b82f6">${t('total')} ${S.tasks.length}</span><span class="chip" style="--c:#f59e0b">${t('rate')} ${S.tasks.length?Math.round(ad/S.tasks.length*100):0}%</span><span class="chip" style="--c:#ef4444">${t('streak')} ${st}</span><span class="chip" style="--c:#8b5cf6">🍅 ${S.pom?.[k]||0}</span></div></div>`:''}
+${h('dead')?`<div class="card"><b>${t('dead')}</b>${up.map(x=>`<div class="row" style="cursor:pointer" data-a="day" data-v="${x.date}"><small>${x.due.replace('T',' ')}</small><span class="gr">${esc(x.title)}</span></div>`).join('')||'—'}</div>`:''}
+${h('habs')?`<div class="card"><b>${t('habs')} · ${hd}/${hs.length}</b><div class="bar"><i style="width:${hs.length?hd/hs.length*100:0}%;background:#22c55e"></i></div>${hs.map(x=>`<div class="row"><span>${S.hlog[k]?.[x.id]?'✅':'⬜'}</span>${x.emoji} ${esc(x.name)}</div>`).join('')}</div>`:''}
+${h('occ')?`<div class="card"><b>${t('occ')}</b>${nx.map(x=>`<div class="row"><small>${x[0].toLocaleDateString(lc(),{month:'short',day:'numeric'})}</small>${ot(x[1])}</div>`).join('')||'—'}</div>`:''}
+${h('scr')?`<div class="card"><b>${t('scr')}</b><textarea data-c="scr">${esc(S.scr||'')}</textarea></div>`:''}</div>`}
+function vSet(){const s=S.set,hw=s.hw||HW0,rg=(k,v,a,b)=>`<input type="range" min="${a}" max="${b}" data-c="${k}" value="${v}">`;
+return`<div class="card"><div class="row"><b>${t('lang')}</b>${[['en','English'],['fa','فارسی'],['ja','日本語']].map(x=>`<button class="${s.lang===x[0]?'on':''}" data-a="lang" data-v="${x[0]}">${x[1]}</button>`).join('')}</div>
+<div class="row"><b>${t('theme')}</b><select data-c="theme">${['auto','light','dark'].map(x=>`<option${s.theme===x?' selected':''}>${x}</option>`).join('')}</select><b>${t('color')}</b><input type="color" data-c="ac" value="${s.ac}"><b>${t('uname')}</b><input data-c="nm" value="${esc(s.name||'')}"></div>
+<div class="row"><b>${t('glass')}</b>${rg('op',s.op??80,20,100)}<b>${t('blur')}</b>${rg('bl',s.bl??18,0,40)}</div>
+<div class="row"><b>${t('bg')}</b><input type="file" accept="image/*,video/*" data-c="bgf"><button data-a="clrbg">${t('clear')}</button></div>
+<div class="row"><b>${t('statuses')}</b><input data-c="st" value="${esc(s.st.join(', '))}" style="flex:1"></div>
+<div class="row"><b>${t('widgets')}</b>${['clock','today','week','stats','dead','habs','occ','scr'].map(w=>`<label><input type="checkbox" data-c="hw" data-v="${w}"${hw.includes(w)?' checked':''}> ${t(w)}</label>`).join('')}</div></div>
+${dCard()}${gCard()}
+<div class="card"><div class="row"><button data-a="exp">${t('export')}</button><button data-a="imp">${t('import')}</button></div><textarea id="io"></textarea><small>${t('local')}</small></div>`}
+/* =====================================================================
+   FLOW CORE — one pipeline for everything:
+   UI edit -> persist() -> IndexedDB (instant)  ─┬─> Data folder (debounced, serialized)
+                                                  └─> Google Drive (debounced, serialized)
+   Every source (IndexedDB / folder / Drive / other devices) is combined with a
+   per-item merge (last-writer-wins per task / habit / tag / journal-day / setting),
+   so nothing is overwritten and nothing is lost when several sources are active.
+   ===================================================================== */
+const GCID='406222892848-edab23bvvosvaspp2o34sejv6crue9f1.apps.googleusercontent.com'; /* your OAuth Client ID */
+const AUTO_REAUTH=true; /* silent token refresh on the next click when the 1-hour token expired */
+const AR=['tasks','tags','habits'],TTL=60*864e5,
+DEF=()=>({tasks:[],tags:[],habits:[],hlog:{},journal:{},pom:{},scr:'',set:{lang:'en',ac:'#7c5cff',theme:'auto',st:['To do','In progress','Blocked','Done']},mt:{},tomb:{},ts:0}),
+N={d:0,c:0}, /* change counters: folder / cloud */
+G={cid:GCID,on:0,st:'off',tok:null,exp:0,busy:0,again:0,t:0,fail:0,next:0,act:0,vp:0,email:'',last:0,rm:'',msg:'',bgd:0,del:new Set()},
+D={st:'off',mod:0,wv:0,t:0,q:Promise.resolve(),bg:0,asked:0,last:0,msg:''};
+let DIR=null,HS={},GM={},GL={},GC=null,GP=null,GA=null,GW=null,ptr=0;
+
+/* ---------- state integrity + per-item merge ---------- */
+function flat(s){const o={};for(const a of AR)for(const x of s[a])o[a+':'+x.id]=x;o.set=s.set;o.scr=s.scr;
+ for(const d in s.journal)o['j:'+d]=s.journal[d];
+ for(const d in s.hlog)for(const h in s.hlog[d])o['h:'+d+':'+h]=!!s.hlog[d][h];
+ for(const d in s.pom)o['p:'+d]=s.pom[d];return o}
+function fix(s){s=s&&typeof s==='object'&&!Array.isArray(s)?s:{};const d=DEF();
+ for(const a of AR)s[a]=Array.isArray(s[a])?s[a].filter(x=>x&&x.id):[];
+ for(const k of['hlog','journal','pom','mt','tomb'])if(!s[k]||typeof s[k]!=='object'||Array.isArray(s[k]))s[k]={};
+ s.set={...d.set,...(s.set&&typeof s.set==='object'?s.set:{})};if(!Array.isArray(s.set.st)||s.set.st.length<2)s.set.st=d.set.st;
+ if(typeof s.scr!=='string')s.scr='';s.ts=+s.ts||0;
+ for(const a of AR)for(const x of s[a]){x.tags=x.tags||[];x.sub=x.sub||[];x.fields=x.fields||[];x.files=x.files||[];x.note=x.note??'';x.due=x.due||''}
+ const f=flat(s);for(const k in f)if(!s.mt[k])s.mt[k]=s.ts||1;return s}
+const hashes=s=>{const f=flat(s),h={};for(const k in f)h[k]=JSON.stringify(f[k]);return h},
+digest=s=>JSON.stringify([Object.keys(s.mt).sort().map(k=>k+'='+s.mt[k]),Object.keys(s.tomb).sort().map(k=>k+'='+s.tomb[k])]);
+function track(){const now=Date.now(),f=flat(S);S.mt=S.mt||{};S.tomb=S.tomb||{};
+ for(const k in f){const j=JSON.stringify(f[k]);if(HS[k]!==j){HS[k]=j;S.mt[k]=now;delete S.tomb[k]}}
+ for(const k in HS)if(!(k in f)){delete HS[k];delete S.mt[k];S.tomb[k]=now}}
+function merge(a,b){const fa=flat(a),fb=flat(b),now=Date.now(),val={},mt={},tomb={};
+ for(const k of new Set([...Object.keys(fa),...Object.keys(fb),...Object.keys(a.tomb),...Object.keys(b.tomb)])){
+  const ia=k in fa,ib=k in fb,ta=ia?a.mt[k]||0:0,tb_=ib?b.mt[k]||0:0,td=Math.max(a.tomb[k]||0,b.tomb[k]||0),tv=Math.max(ta,tb_);
+  if(td&&td>=tv){if(now-td<TTL)tomb[k]=td;continue}
+  if(!ia&&!ib)continue;
+  let ua=ia&&(!ib||ta>tb_);if(ia&&ib&&ta===tb_)ua=JSON.stringify(fa[k])>=JSON.stringify(fb[k]);
+  val[k]=ua?fa[k]:fb[k];mt[k]=ua?ta:tb_}
+ const o={...b,...a,mt,tomb,ts:Math.max(a.ts||0,b.ts||0),journal:{},hlog:{},pom:{}};
+ for(const ar of AR){o[ar]=[];const seen=new Set();for(const x of[...a[ar],...b[ar]]){const k=ar+':'+x.id;if(k in val&&!seen.has(k)){seen.add(k);o[ar].push(val[k])}}}
+ o.set={...DEF().set,...(val.set||a.set)};o.scr=val.scr??'';
+ for(const k in val){let m;if(k.startsWith('j:'))o.journal[k.slice(2)]=val[k];else if(m=k.match(/^h:(\d{4}-\d\d-\d\d):(.+)$/))(o.hlog[m[1]]=o.hlog[m[1]]||{})[m[2]]=val[k];else if(k.startsWith('p:'))o.pom[k.slice(2)]=val[k]}
+ return o}
+/* combine a remote copy into the live state. src: 'd' folder, 'c' cloud */
+function absorb(r,src){r=fix(r);const before=digest(S),m=merge(S,r),after=digest(m),ch=before!==after,push=digest(r)!==after;
+ if(ch){kv('put','db-bak',S);S=m;HS=hashes(S);kv('put','db',S);if(src==='d')N.c++;else N.d++}
+ return{ch,push}}
+function persist(){track();S.ts=Date.now();N.d++;N.c++;kv('put','db',S);dirSoon();cloudSoon()}
+
+/* ---------- smooth rendering (keeps scroll/focus, never fights a click or typing) ---------- */
+const pd=()=>ptr&&Date.now()-ptr<700,
+typing=()=>{const e=document.activeElement;return!!e&&(e.tagName==='TEXTAREA'||e.tagName==='SELECT'||(e.tagName==='INPUT'&&!/^(checkbox|radio|range|color|file|button|submit)$/.test(e.type)))},
+focusInfo=()=>{const e=document.activeElement;if(!e||!e.closest?.('#app')||!/^(INPUT|TEXTAREA|SELECT)$/.test(e.tagName))return null;
+ const q=['id','data-c','data-k','data-v','data-i','data-j'].filter(n=>e.hasAttribute(n)).map(n=>`[${n}="${CSS.escape(e.getAttribute(n))}"]`).join('');if(!q)return null;
+ let ss=null,se=null;try{ss=e.selectionStart;se=e.selectionEnd}catch{}return{q:e.tagName.toLowerCase()+q,ss,se}};
+function render(){
+ if(pd()){V.rq=1;clearTimeout(V.rqt);V.rqt=setTimeout(()=>{if(V.rq){V.rq=0;render()}},800-(Date.now()-ptr));return}
+ const h=document.documentElement,s=S.set,a=$('#app'),key=V.tab+V.date,same=V.lk===key,
+ sy=scrollY,kb=$('.kb')?.scrollLeft||0,nv=$('.nav')?.scrollLeft||0,fo=V.kf?focusInfo():null;
+ h.dir=s.lang==='fa'?'rtl':'ltr';h.lang=s.lang;h.dataset.theme=s.theme;h.style.setProperty('--ac',s.ac);h.style.setProperty('--o',(s.op??80)/100);h.style.setProperty('--bl',(s.bl??18)+'px');
+ const bk=BG?BG.length+':'+BG.slice(-24):'';
+ if(V.bk!==bk){V.bk=bk;const vid=BG.startsWith('data:video'),v0=$('#bgv');
+  if(vid){let v=v0;if(!v){v=document.createElement('video');v.id='bgv';v.muted=v.loop=v.autoplay=v.playsInline=true;document.body.prepend(v)}v.src=BG;v.play().catch(()=>{})}else if(v0)v0.remove();
+  document.body.style.backgroundImage=BG&&!vid?`url(${BG})`:''}
+ a.className=same?'noa':'';V.lk=key;
+ a.innerHTML=nav()+'<main>'+(D.st==='perm'?`<div class="card"><button class="on" data-a="grant">📁 ${t('reconn')}</button></div>`:'')+({home:vHome,cal:vCal,day:vDay,habits:vHabits,archive:vArchive,graph:vGraph,journal:vJournal,set:vSet,work:vWork}[V.tab])()+'</main>';
+ scrollTo(0,same?sy:0);const k2=$('.kb');if(k2)k2.scrollLeft=kb;const n2=$('.nav');if(n2)n2.scrollLeft=nv;
+ if(fo){const n=$(fo.q);if(n){n.focus({preventScroll:true});try{if(fo.ss!=null)n.setSelectionRange(fo.ss,fo.se)}catch{}}}
+ tick();ui()}
+/* re-render caused by background sync: wait while the user is typing / pressing */
+function soft(){if(!V.ready)return;if(typing()){V.rp=1;return}render()}
+addEventListener('pointerdown',()=>ptr=Date.now(),true);
+{const up=()=>{ptr=0;if(V.rq){V.rq=0;setTimeout(render,0)}};addEventListener('pointerup',up,true);addEventListener('pointercancel',up,true)}
+document.addEventListener('focusout',()=>setTimeout(()=>{if(V.rp&&!typing()){V.rp=0;render()}},60));
+
+/* ---------- unified action handlers (safe against items deleted by a sync) ---------- */
+document.addEventListener('click',e=>{G.act=Date.now();
+ if(D.st==='perm'&&!D.asked){D.asked=1;dPerm(1).then(ok=>ok&&dirSync())}
+ if(AUTO_REAUTH&&G.on&&!tokOk()&&!GA&&Date.now()>G.next){G.next=Date.now()+300000;gAuth('none').then(()=>gSync()).catch(()=>{G.st='re';ui()})}
+ const el=e.target.closest('[data-a]');if(!el)return;
+ try{const r=A[el.dataset.a]?.(el);r?.catch?.(x=>{console.error(x);render()})}catch(x){console.error(x);render()}});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(!el||!C[el.dataset.c])return;
+ const k=task(el.dataset.i);if(el.dataset.i&&!k){render();return}
+ try{const r=C[el.dataset.c](el,k);r?.catch?.(x=>{console.error(x);render()})}catch(x){console.error(x);render()}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.isComposing)return;const el=e.target.closest('[data-k]');
+ if(el&&el.value.trim()){V.kf=1;try{K[el.dataset.k](el)}catch(x){console.error(x);render()}finally{V.kf=0}}});
+
+/* ---------- translations for the sync UI ---------- */
+Object.assign(L,{gsync:'Google sync|همگام‌سازی گوگل|Google同期',gconn:'Connect Google|اتصال به گوگل|Googleに接続',gdis:'Disconnect|قطع اتصال|切断',gnow:'Sync now|همگام‌سازی الان|今すぐ同期',
+gok:'Synced|همگام شد|同期済み',gbusy:'Syncing…|در حال همگام‌سازی…|同期中…',gre:'Tap anywhere to reconnect|برای اتصال مجدد یک بار کلیک کنید|クリックして再接続',gerr:'Error (will retry)|خطا (دوباره تلاش می‌شود)|エラー(再試行します)',
+dperm:'Allow folder access|اجازه دسترسی به پوشه|フォルダを許可',
+ghelp:'Everything is saved locally first (instant), then merged item-by-item with your private hidden app folder in Google Drive, so all your devices stay in sync without overwriting each other. Needs http(s) (not file://) and the origin below listed in Authorized JavaScript origins.|همه چیز اول به‌صورت محلی ذخیره می‌شود (آنی) و بعد آیتم‌به‌آیتم با پوشه خصوصی و مخفی برنامه در Google Drive ادغام می‌شود؛ پس همه دستگاه‌ها همگام می‌مانند و چیزی روی هم نوشته نمی‌شود. فقط روی http(s) کار می‌کند و آدرس زیر باید در Authorized JavaScript origins باشد.|データはまずローカルに保存され、その後 Google ドライブの非表示アプリフォルダと項目単位でマージされます。http(s) のみ対応。下記オリジンを承認済み JavaScript 生成元に追加してください。'});
+
+/* ---------- Data folder (File System Access API) ---------- */
+const dq=fn=>{const p=D.q.then(fn);D.q=p.catch(()=>{});return p}; /* every folder operation runs one-at-a-time */
+async function dPerm(ask){if(!DIR)return false;try{let r=await DIR.queryPermission({mode:'readwrite'});if(r!=='granted'&&ask)r=await DIR.requestPermission({mode:'readwrite'});return r==='granted'}catch{return false}}
+async function wf(path,data){const a=path.split('/');let d=DIR;for(const q of a.slice(0,-1))d=await d.getDirectoryHandle(q,{create:true});const w=await(await d.getFileHandle(a.at(-1),{create:true})).createWritable();try{await w.write(data);await w.close()}catch(e){try{await w.abort()}catch{}throw e}}
+async function rf(path){const a=path.split('/');let d=DIR;for(const q of a.slice(0,-1))d=await d.getDirectoryHandle(q);return(await d.getFileHandle(a.at(-1))).getFile()}
+const dirSoon=()=>{if(!DIR||D.st==='perm')return;clearTimeout(D.t);D.t=setTimeout(dirSync,800)};
+async function dirFiles(){const have=new Set();try{const fd=await DIR.getDirectoryHandle('files');for await(const[n]of fd.entries())have.add(n)}catch{}
+ for(const k of S.tasks)for(const f of k.files||[]){const n=f.id+'-'+f.n;if(!have.has(n)){const u=await kv('get','f:'+f.id);if(u){await wf('files/'+n,await(await fetch(u)).blob());have.add(n)}}}}
+function dirSync(){return dq(async()=>{
+ if(!DIR)return;const was=!!D.pp;if(!await dPerm(0)){D.st='perm';D.pp=1;ui();if(!was)soft();return}
+ let ch=0,w=0;
+ try{let f=null;try{f=await rf('flow-db.json')}catch{}
+  if(f&&f.size){if(f.lastModified!==D.mod){let r=null,txt='';try{txt=await f.text();r=JSON.parse(txt)}catch{}
+    if(r&&typeof r==='object'){const a=absorb(r,'d');ch=a.ch;w=a.push}else{await wf('flow-db.bad-'+Date.now()+'.json',txt).catch(()=>{});w=1}}}
+  else w=1;
+  if(D.wv!==N.d)w=1;
+  if(w){D.st='busy';ui();const v=N.d;await wf('flow-db.json',JSON.stringify(S));D.wv=v;D.mod=(await rf('flow-db.json')).lastModified}else if(f)D.mod=f.lastModified;
+  await dirFiles();
+  if(D.bg){await wf('bg.dat',BG||'');D.bg=0}
+  else if(!BG){try{const b=await rf('bg.dat');if(b.size){const x=await b.text();if(x.startsWith('data:')){BG=x;kv('put','bg',BG);V.bk='';ch=1;G.bgd=0}}}catch{}}
+  D.st='ok';D.last=Date.now();D.msg=''}
+ catch(e){D.st=(e.name==='NotAllowedError'||e.name==='SecurityError')?'perm':'err';D.msg=e.message||e.name}
+ const pp=D.st==='perm';D.pp=pp?1:0;ui();if(ch||pp!==was)soft();if(ch)cloudSoon()})}
+const fileGone=id=>{kv('put','f:'+id,'');if(G.on){G.del.add('f-'+id);cloudSoon()}
+ if(DIR)dq(async()=>{try{const fd=await DIR.getDirectoryHandle('files');for await(const[n]of fd.entries())if(n.startsWith(id+'-'))await fd.removeEntry(n)}catch{}})};
+const dCard=()=>{const s=D.st,c=s==='ok'?'#22c55e':s==='perm'||s==='err'?'#ef4444':'#f59e0b';
+ return`<div class="card"><b>📁 ${t('folder')}</b><div class="row"><button data-a="pick">${t('pick')}</button>${DIR?`<span class="chip" style="--c:${c}">${esc(DIR.name)}</span><span id="ds" class="mu"></span><span class="gr"></span><button data-a="dnow">${t('gnow')}</button><button class="x" data-a="unlink">×</button>`:''}</div>${V.de?`<div style="color:#ef4444">${window.showDirectoryPicker?'Blocked / cancelled':'Chrome / Edge (desktop)'}</div>`:''}<small>${t('foldern')}</small></div>`};
+
+/* ---------- Google Drive (hidden appDataFolder) ---------- */
+const GSC='https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/userinfo.email',GAPI='https://www.googleapis.com/',
+gErr=(m,a)=>Object.assign(new Error(m),{auth:a}),gSave=()=>kv('put','g',{cid:G.cid,on:G.on,email:G.email}),tokOk=()=>!!G.tok&&Date.now()<G.exp,
+gMsg=m=>({popup_failed_to_open:'Popup blocked — allow popups for this site',popup_closed:'Sign-in window was closed',access_denied:'Access denied',offline:'No connection to Google',timeout:'Sign-in timed out'})[m]||m,
+canPopup=()=>navigator.userActivation?navigator.userActivation.isActive:Date.now()-G.act<3000;
+const gis=()=>GP||(GP=window.google?.accounts?.oauth2?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=ok;s.onerror=()=>{GP=null;no(gErr('offline'))};document.head.appendChild(s)}));
+/* ONE sign-in at a time; shared by every caller, so popups never pile up or loop */
+function gAuth(prompt){if(GA)return GA;
+ GA=gis().then(()=>new Promise((ok,no)=>{
+  const to=setTimeout(()=>{GW=null;no(gErr('timeout',1))},prompt==='none'?12000:120000);
+  GW={ok:r=>{clearTimeout(to);GW=null;if(r.error||!r.access_token)return no(gErr(r.error||'auth',1));G.tok=r.access_token;G.exp=Date.now()+(+r.expires_in-120)*1000;kv('put','gt',{tok:G.tok,exp:G.exp});ok(G.tok)},
+      no:e=>{clearTimeout(to);GW=null;no(gErr(e?.type||'auth',1))}};
+  try{if(!GC||GC.cid!==G.cid)GC={cid:G.cid,c:google.accounts.oauth2.initTokenClient({client_id:G.cid,scope:GSC,callback:r=>GW?.ok(r),error_callback:e=>GW?.no(e)})};
+   GC.c.requestAccessToken({prompt,...(G.email?{hint:G.email}:{})})}catch(e){clearTimeout(to);GW=null;no(gErr(e.message,1))}}));
+ GA.then(()=>{GA=null},()=>{GA=null});return GA}
+const gTok=async()=>{if(tokOk())return G.tok;if(canPopup())return gAuth('none');throw gErr('reauth',1)};
+async function gReq(u,o={}){const go=async()=>fetch(u,{...o,signal:AbortSignal.timeout?.(45000),headers:{...o.headers,Authorization:'Bearer '+await gTok()}});
+ let r=await go();if(r.status===401){G.tok=null;G.exp=0;r=await go()}
+ if(!r.ok){const j=await r.json().catch(()=>({}));const e=gErr('Drive '+r.status+(j.error?.message?' '+j.error.message:''));e.code=r.status;throw e}return r}
+async function gList(){const n={};let pt='';do{const j=await(await gReq(GAPI+'drive/v3/files?spaces=appDataFolder&pageSize=1000&fields=nextPageToken,files(id,name,modifiedTime)'+(pt?'&pageToken='+pt:''))).json();
+ (j.files||[]).forEach(f=>{if(!n[f.name]||f.modifiedTime>n[f.name].modifiedTime)n[f.name]=f});pt=j.nextPageToken}while(pt);GM=n}
+const gGet=async id=>(await gReq(GAPI+'drive/v3/files/'+id+'?alt=media')).text();
+async function gPut(name,text){const F='&fields=id,modifiedTime',B=GAPI+'upload/drive/v3/files';let r;const m=GM[name];
+ if(m){try{r=await gReq(B+'/'+m.id+'?uploadType=media'+F,{method:'PATCH',headers:{'Content-Type':'text/plain'},body:text})}catch(e){if(e.code!==404)throw e;delete GM[name]}}
+ if(!r){const bd='fl'+uid()+uid();r=await gReq(B+'?uploadType=multipart'+F,{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+bd},
+  body:`--${bd}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify({name,parents:['appDataFolder']})}\r\n--${bd}\r\nContent-Type: text/plain\r\n\r\n${text}\r\n--${bd}--`})}
+ const j=await r.json();GM[name]={id:j.id,name,modifiedTime:j.modifiedTime};return j}
+async function gDel(n){const m=GM[n];if(m){try{await gReq(GAPI+'drive/v3/files/'+m.id,{method:'DELETE'})}catch(e){if(e.code!==404)throw e}delete GM[n]}}
+async function gFiles(){let ch=0;
+ for(const k of S.tasks)for(const f of k.files||[]){const n='f-'+f.id;if(!GM[n]){const u=await kv('get','f:'+f.id);if(u)await gPut(n,u)}}
+ const b=GM['bg.dat'];
+ if(G.bgd){G.bgd=0;if(BG)await gPut('bg.dat',BG);else await gDel('bg.dat');GL.bg=GM['bg.dat']?.modifiedTime||''}
+ else if(b&&b.modifiedTime!==GL.bg){BG=await gGet(b.id);kv('put','bg',BG);GL.bg=b.modifiedTime;V.bk='';D.bg=1;ch=1}
+ else if(!b&&GL.bg){BG='';kv('put','bg','');GL.bg='';V.bk='';D.bg=1;ch=1}
+ else if(!b&&BG){await gPut('bg.dat',BG);GL.bg=GM['bg.dat'].modifiedTime}
+ kv('put','gl',GL);return ch}
+const gSoon=ms=>{clearTimeout(G.t);G.t=setTimeout(gSync,ms)},cloudSoon=()=>{if(G.on&&G.st!=='re')gSoon(2500)};
+async function gSync(manual){
+ if(!G.on)return;if(!navigator.onLine){G.st='err';G.msg='offline';ui();return}
+ if(G.busy){G.again=1;return}G.busy=1;clearTimeout(G.t);let ch=0;
+ if(manual||G.vp!==N.c||G.st!=='ok'){G.st='busy';ui()}
+ try{await gTok();await gList();
+  const m=GM['flow-db.json'];let push=!m||G.vp!==N.c;const v=N.c;
+  if(m&&m.modifiedTime!==G.rm){const a=absorb(JSON.parse(await gGet(m.id)),'c');ch=a.ch;if(a.push)push=true;G.rm=m.modifiedTime}
+  if(push){const v2=N.c,j=await gPut('flow-db.json',JSON.stringify(S));G.rm=j.modifiedTime;G.vp=v2}else G.vp=v;
+  for(const n of[...G.del]){await gDel(n);G.del.delete(n)}
+  if(await gFiles())ch=1;
+  G.st='ok';G.msg='';G.last=Date.now();G.fail=0}
+ catch(e){G.fail++;if(e.auth){G.st='re';G.msg=''}else{G.st='err';G.msg=gMsg(e.message)}}
+ G.busy=0;ui();
+ if(ch){soft();dirSoon()}
+ if(G.st==='ok'&&(G.again||G.vp!==N.c)){G.again=0;gSoon(1500)}else if(G.st==='err')gSoon(Math.min(120000,8000*2**Math.min(G.fail,4)))}
+const GT={ok:'gok',busy:'gbusy',re:'gre',err:'gerr'},tm=ms=>new Date(ms).toLocaleTimeString(lc());
+function ui(){const b=$('#gb');
+ if(b){b.style.display=DIR||G.on?'':'none';const gi={ok:'✓',busy:'⟳',re:'⚠',err:'✕'},ps=[];
+  if(DIR)ps.push('📁'+({ok:'✓',busy:'⟳',perm:'⚠',err:'✕'}[D.st]||''));if(G.on)ps.push('☁️'+(gi[G.st]||''));b.textContent=ps.join(' ');
+  b.classList.toggle('bad',D.st==='perm'||D.st==='err'||G.st==='re'||G.st==='err');
+  b.title=[DIR?'📁 '+(D.st==='perm'?t('dperm'):D.st==='ok'?t('gok'):D.st==='busy'?t('gbusy'):D.msg):'',G.on?'☁️ '+(t(GT[G.st]||'gok')):''].filter(Boolean).join('\n')}
+ let s=$('#gs');if(s)s.textContent=G.st in GT?t(GT[G.st])+(G.st==='ok'&&G.last?' · '+tm(G.last):'')+(G.st==='err'&&G.msg?' · '+G.msg:''):G.msg;
+ s=$('#ds');if(s)s.textContent=D.st==='perm'?t('dperm'):D.st==='ok'?t('gok')+(D.last?' · '+tm(D.last):''):D.st==='busy'?t('gbusy'):D.st==='err'?D.msg:''}
+const gCard=()=>`<div class="card"><b>☁️ ${t('gsync')}</b>
+${G.on?`<div class="row"><span class="chip" style="--c:#22c55e">${esc(G.email||'Google')}</span><span id="gs" class="mu"></span><span class="gr"></span><button data-a="gnow">${t('gnow')}</button><button data-a="gdis">${t('gdis')}</button></div>`
+:`<div class="row">${GCID?'':`<input data-c="gcid" placeholder="xxxxxxxx.apps.googleusercontent.com" value="${esc(G.cid)}" style="flex:1">`}<button class="on" data-a="gconn">${t('gconn')}</button><span id="gs" class="mu" style="color:#ef4444"></span></div>`}
+<small>${t('ghelp')}</small><div><small>Origin: <code>${esc(location.origin)}</code></small></div></div>`;
+{const gb=document.createElement('button');gb.id='gb';gb.dataset.a='gnow';gb.style.display='none';document.body.appendChild(gb)}
+
+/* ---------- actions ---------- */
+Object.assign(C,{gcid:e=>{G.cid=e.value.trim();gSave()},
+ file:async(e,k)=>{const id0=k.id,add=[];for(const f of e.files){const u=await rd(f),id=uid();await kv('put','f:'+id,u);add.push({id,n:f.name})}
+  const kk=task(id0);if(!kk)return;kk.files.push(...add);sv()},
+ bgf:async e=>{const f=e.files[0];if(!f)return;BG=await rd(f);kv('put','bg',BG);V.bk='';G.bgd=1;D.bg=1;dirSoon();cloudSoon();render()}});
+Object.assign(A,{
+ pick:async()=>{try{DIR=await showDirectoryPicker({mode:'readwrite'});await kv('put','dir',DIR);V.de=0;D.st='busy';D.mod=0;D.wv=N.d;render();await dirSync()}catch(e){if(e.name!=='AbortError')V.de=1}render()},
+ grant:async()=>{if(await dPerm(1))await dirSync();render()},
+ dnow:async()=>{if(D.st==='perm'){if(await dPerm(1))await dirSync()}else await dirSync();render()},
+ unlink:()=>{DIR=null;D.st='off';kv('put','dir',null);render()},
+ fdl:async e=>{const f=task(e.dataset.i)?.files[e.dataset.v];if(!f)return;let u=await kv('get','f:'+f.id);
+  if(!u&&DIR)try{u=await rd(await rf('files/'+f.id+'-'+f.n))}catch{}
+  if(!u&&G.on)try{const m=GM['f-'+f.id]||(await gList(),GM['f-'+f.id]);if(m)u=await gGet(m.id)}catch{}
+  if(!u)return;kv('put','f:'+f.id,u);const a=document.createElement('a');a.href=u;a.download=f.n;a.click()},
+ fxdel:e=>{const k=task(e.dataset.i),f=k?.files[e.dataset.v];if(!f)return;k.files.splice(e.dataset.v,1);fileGone(f.id);sv()},
+ del:e=>{const k=task(e.dataset.i),ids=(k?.files||[]).map(f=>f.id);S.tasks=S.tasks.filter(x=>x.id!==e.dataset.i);V.open=null;ids.forEach(fileGone);sv()},
+ clrbg:()=>{BG='';kv('put','bg','');V.bk='';G.bgd=1;D.bg=1;dirSoon();cloudSoon();render()},
+ gconn:async()=>{const i=$('[data-c=gcid]');if(i)G.cid=i.value.trim();if(!G.cid){i?.focus();return}
+  G.st='busy';G.msg='';ui();
+  try{await gAuth('');G.on=1;try{const j=await(await fetch(GAPI+'oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+G.tok}})).json();G.email=j.email||''}catch{}
+   gSave();G.vp=-1;G.rm='';await gSync(1);render()}
+  catch(e){G.on=0;G.st='off';G.msg=gMsg(e.message);gSave();render()}},
+ gnow:async()=>{if(D.st==='perm'){if(await dPerm(1))await dirSync();render()}
+  if(!G.on)return;
+  if(G.st==='re'||!tokOk()){G.st='busy';ui();try{await gAuth('');await gSync(1)}catch(e){G.st='re';G.msg=gMsg(e.message);ui()}}else gSync(1)},
+ gdis:()=>{G.on=0;G.tok=null;G.exp=0;G.st='off';G.msg='';GL={};G.rm='';kv('put','gl',{});kv('put','gt',null);gSave();ui();render()}});
+
+/* ---------- triggers ---------- */
+setInterval(()=>{if(G.on&&!document.hidden&&G.st!=='re'&&!G.busy)gSync()},40000);
+setInterval(()=>{if(DIR&&!document.hidden&&D.st!=='perm')dirSync()},8000);
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(DIR&&D.wv!==N.d){clearTimeout(D.t);dirSync()}}else{if(G.on&&G.st!=='re')gSync();if(DIR&&D.st!=='perm')dirSync()}});
+addEventListener('online',()=>{if(G.on&&G.st!=='re')gSync()});
+
+/* ---------- boot: strict order, one place ---------- */
+(async()=>{
+ try{navigator.storage?.persist?.()}catch{}
+ const s=await kv('get','db');S=fix(s&&typeof s==='object'?s:DEF());HS=hashes(S);
+ BG=(await kv('get','bg'))||'';
+ const g=await kv('get','g'),gt=await kv('get','gt');GL=(await kv('get','gl'))||{};
+ if(g){G.cid=GCID||g.cid||'';G.email=g.email||'';G.on=g.on&&G.cid?1:0}
+ if(gt&&gt.tok&&gt.exp>Date.now()){G.tok=gt.tok;G.exp=gt.exp}
+ G.vp=N.c;D.wv=N.d;
+ try{DIR=(await kv('get','dir'))||null;if(DIR)await dirSync()}catch{DIR=null}
+ render();V.ready=1;setInterval(tick,1000);
+ gis().catch(()=>{});
+ if(G.on){if(tokOk()){G.st='busy';ui();gSync()}else{G.st='re';ui()}}
+})();
+
+</script>
+</body></html>
