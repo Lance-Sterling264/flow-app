@@ -1,4 +1,13 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Flow</title>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"><title>Joyl</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#7c5cff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Joyl">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+
 <style>
 *{box-sizing:border-box;margin:0}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fa;--cb:#fff;--o:.8;--bl:18px;--cd:color-mix(in srgb,var(--cb) calc(var(--o)*100%),transparent);--tx:#1c1e2b;--mu:#7b8096;--ln:#0000001a;--ac:#7c5cff}
@@ -53,6 +62,16 @@ body{background-image:radial-gradient(60vmax 60vmax at 12% 8%,color-mix(in srgb,
 #gb.bad{border-color:#ef4444;color:#ef4444}
 .noa .dt{animation:none}
 #gb{cursor:pointer}
+/* ===== v2: look & feel variables ===== */
+body{font-family:var(--ff,system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans JP",sans-serif);font-size:calc(15px*var(--fs,1))}
+body{background-image:radial-gradient(60vmax 60vmax at 12% 8%,color-mix(in srgb,var(--ac) 50%,transparent),transparent 60%),radial-gradient(50vmax 50vmax at 92% 85%,var(--g2,#22d3ee55),transparent 60%),radial-gradient(40vmax 40vmax at 75% 0,var(--g3,#f472b655),transparent 60%)}
+.card,.nav{border-radius:var(--rad,22px)}.nav{border-radius:99px}
+.kc{border-radius:calc(var(--rad,22px) - 4px)}
+.sw{width:30px;height:30px;border-radius:50%;padding:0;border:2px solid transparent}.sw.on{border-color:var(--tx)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.chk{display:flex;align-items:center;gap:6px}
+html.standalone main{padding-top:calc(14px + env(safe-area-inset-top,0px))}
+@media print{.nav,#gb{display:none!important}}
 </style></head><body><div id="app"></div>
 <script>
 const $=s=>document.querySelector(s),p=n=>String(n).padStart(2,'0'),ymd=d=>d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),T0=()=>ymd(new Date()),uid=()=>Math.random().toString(36).slice(2,10),
@@ -421,5 +440,203 @@ addEventListener('online',()=>{if(G.on&&G.st!=='re')gSync()});
  if(G.on){if(tokOk()){G.st='busy';ui();gSync()}else{G.st='re';ui()}}
 })();
 
+
+/* =====================================================================
+   v2 ADD-ONS — PWA install + offline, reminders, exports/reports, fonts & themes
+   ===================================================================== */
+Object.assign(L,{
+ pwa:'App & install|اپ و نصب|アプリとインストール',inst:'Install app|نصب اپلیکیشن|アプリをインストール',
+ insth:'On iPhone/iPad: Share → Add to Home Screen.|روی آیفون/آیپد: Share ← Add to Home Screen.|iPhone/iPad：共有 → ホーム画面に追加。',
+ insd:'Installed ✓|نصب شده ✓|インストール済み ✓',offl:'Offline-ready|آماده‌ی آفلاین|オフライン対応',offn:'Needs https:// or localhost|نیازمند https:// یا localhost|https:// または localhost が必要',
+ notif:'Reminders|یادآورها|リマインダー',nen:'Enable notifications|فعال‌سازی اعلان‌ها|通知を有効にする',nlead:'Remind before deadline (min)|یادآوری قبل از ددلاین (دقیقه)|締切の何分前に通知',
+ nblk:'Blocked in browser settings|در تنظیمات مرورگر مسدود است|ブラウザ設定でブロック中',nuns:'Not supported here|اینجا پشتیبانی نمی‌شود|未対応',ntest:'Test|تست|テスト',
+ nhelp:'Fires while the app is open (also in a background tab or installed app). No server push, so a fully closed app cannot notify.|تا وقتی اپ باز است (حتی در تب پس‌زمینه یا اپ نصب‌شده) کار می‌کند. پوش سروری ندارد، پس اپِ کاملاً بسته نمی‌تواند اعلان بدهد.|アプリが開いている間(バックグラウンドも可)に通知します。サーバープッシュは無いため、完全に閉じていると通知できません。',
+ ndue:'Due soon|ددلاین نزدیک است|まもなく締切',novd:'Overdue|از ددلاین گذشته|期限切れ',npom:'Pomodoro complete 🍅|پومودورو تمام شد 🍅|ポモドーロ完了 🍅',ntt:'Notifications are on|اعلان‌ها روشن است|通知はオンです',
+ expo:'Export & reports|خروجی و گزارش|エクスポートとレポート',csvA:'All tasks (CSV)|همه تسک‌ها (CSV)|全タスク(CSV)',csvM:'This month (CSV)|این ماه (CSV)|当月(CSV)',csvH:'Habit log (CSV)|لاگ عادت‌ها (CSV)|習慣ログ(CSV)',
+ bkj:'Backup (JSON)|بکاپ (JSON)|バックアップ(JSON)',repm:'Monthly report|گزارش ماهانه|月間レポート',repp:'Print / Save PDF|چاپ / ذخیره PDF|印刷 / PDF保存',repd:'Download .html|دانلود .html|.html保存',
+ look:'Appearance|ظاهر|外観',font:'Font|فونت|フォント',fauto:'Auto (by language)|خودکار (بر اساس زبان)|自動(言語別)',fsz:'Text size|اندازه متن|文字サイズ',rad:'Corner radius|گردی گوشه‌ها|角の丸み',pres:'Theme presets|تم‌های آماده|テーマプリセット',
+ tsk:'Task|تسک|タスク',prod:'Priority|اولویت|優先度',tg2:'Tags|تگ‌ها|タグ',hn:'Habit|عادت|習慣',ty:'Type|نوع|種類',cnt:'Days done|روز انجام|達成日数',jr:'Journal|ژورنال|日記',gen:'Generated|تولید شده|作成'
+});
+const FONTS={auto:['',''],system:['System','system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans JP",sans-serif'],
+ vazir:['Vazirmatn','Vazirmatn,system-ui,"Noto Sans JP",sans-serif'],shabnam:['Shabnam (شبنم)','Shabnam,Vazirmatn,system-ui,"Noto Sans JP",sans-serif'],
+ inter:['Inter','Inter,system-ui,"Noto Sans JP",sans-serif'],mono:['JetBrains Mono','"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace']},
+FL={vazir:'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap',shabnam:'https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css',
+ inter:'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',mono:'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap'},
+PRESETS=[['Violet','#7c5cff','#22d3ee55','#f472b655'],['Ocean','#0ea5e9','#34d39955','#6366f155'],['Sakura','#ec4899','#fda4af66','#c084fc55'],['Forest','#16a34a','#a3e63555','#14b8a655'],['Ember','#f97316','#facc1555','#ef444455'],['Slate','#64748b','#94a3b844','#e2e8f044']];
+const fontKey=()=>{const f=S.set.font||'auto';return f==='auto'?(S.set.lang==='fa'?'vazir':'system'):f};
+function loadFont(k){if(!FL[k]||document.getElementById('fnt-'+k))return;const l=document.createElement('link');l.id='fnt-'+k;l.rel='stylesheet';l.href=FL[k];document.head.appendChild(l)}
+function applyLook(){const s=S.set,r=document.documentElement.style,k=fontKey();loadFont(k);
+ r.setProperty('--ff',FONTS[k][1]);r.setProperty('--fs',(s.fs||100)/100);r.setProperty('--rad',(s.rad??22)+'px');r.setProperty('--g2',s.g2||'#22d3ee55');r.setProperty('--g3',s.g3||'#f472b655');
+ const m=document.querySelector('meta[name=theme-color]');if(m)m.content=s.ac||'#7c5cff'}
+{const _r=render;render=function(){_r();applyLook()}}
+applyLook();
+
+/* ---------- PWA: service worker + install prompt ---------- */
+let SWR=null,DEFER=null;
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+if(standalone())document.documentElement.classList.add('standalone');
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+ navigator.serviceWorker.register('sw.js').then(r=>{SWR=r;return navigator.serviceWorker.ready}).then(r=>{SWR=r;if(V.tab==='set')render()}).catch(e=>console.warn('SW',e))}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();DEFER=e;if(V.tab==='set'&&V.ready)soft()});
+addEventListener('appinstalled',()=>{DEFER=null;if(V.ready)soft()});
+
+/* ---------- reminders ---------- */
+let NS=new Set(),pomN=null;
+kv('get','nt').then(a=>{NS=new Set(a||[])});
+const nOK=()=>'Notification' in window&&Notification.permission==='granted'&&!!S.set.notif;
+function notify(title,body,tag){if(!nOK())return;
+ const o={body,tag,icon:'icon-192.png',badge:'icon-192.png',lang:S.set.lang,dir:S.set.lang==='fa'?'rtl':'ltr'};
+ const fb=()=>{try{new Notification(title,o)}catch{}};
+ if(SWR&&SWR.showNotification)SWR.showNotification(title,o).catch(fb);else fb()}
+function nCheck(){if(!V.ready||!nOK())return;const now=Date.now(),lead=(S.set.lead??15)*60000;let ch=0;
+ for(const k of S.tasks){if(k.done||!k.due)continue;const d=new Date(k.due).getTime();if(isNaN(d))continue;
+  const a=k.id+'|'+k.due+'|s',b=k.id+'|'+k.due+'|o';
+  if(now>=d-lead&&now<d&&!NS.has(a)){NS.add(a);ch=1;notify('⏰ '+t('ndue')+': '+k.title,k.due.replace('T',' '),a)}
+  if(now>=d&&now<d+12*36e5&&!NS.has(b)){NS.add(b);NS.add(a);ch=1;notify('⚠️ '+t('novd')+': '+k.title,k.due.replace('T',' '),b)}}
+ const cur=S.pom?.[T0()]||0;if(pomN!==null&&cur>pomN)notify(t('npom'),'',cur+'|pom');pomN=cur;
+ if(ch)kv('put','nt',[...NS].slice(-600))}
+setInterval(nCheck,20000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)nCheck()});
+
+/* ---------- export helpers ---------- */
+const dl=(name,data,type)=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2500)},
+ csvq=(v,txt)=>{v=String(v??'');if(txt&&/^[=+\-@\t\r]/.test(v))v="'"+v;return/[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v},
+ csvOut=rows=>'﻿'+rows.map(r=>r.map((v,i)=>csvq(v,1)).join(',')).join('\r\n'),
+ lt=ms=>{if(!ms)return'';const d=new Date(ms);return ymd(d)+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds())},
+ rmon=()=>V.rm||T0().slice(0,7),
+ taskRows=list=>[['date','title','status','done','completed_at','deadline','priority','tags','subtasks','fields','notes','files','created_at'],
+  ...list.sort((a,b)=>a.date.localeCompare(b.date)||a.created-b.created).map(k=>[k.date,k.title,k.status,k.done?'yes':'no',lt(k.doneAt),k.due.replace('T',' '),t('p'+k.prio),
+   k.tags.map(i=>tg(i)?.name).filter(Boolean).join('; '),k.sub.map(s=>(s.d?'[x] ':'[ ] ')+s.t).join('; '),k.fields.map(f=>f.k+': '+f.v).join('; '),k.note,k.files.map(f=>f.n).join('; '),lt(k.created)])];
+function monthReport(mo){const dm=new Date(+mo.slice(0,4),+mo.slice(5),0).getDate(),rtl=S.set.lang==='fa',
+  ts=S.tasks.filter(x=>x.date.startsWith(mo)).sort((a,b)=>a.date.localeCompare(b.date)||a.created-b.created),dn=ts.filter(x=>x.done).length,
+  title=new Date(mo+'-01T00:00').toLocaleDateString(lc(),{month:'long',year:'numeric'}),by={};ts.forEach(x=>(by[x.date]=by[x.date]||[]).push(x));
+ const hrs=S.habits.map(h=>{let c=0,cells='';for(let i=1;i<=dm;i++){const on=S.hlog[mo+'-'+p(i)]?.[h.id];if(on)c++;cells+=`<i class="${on?'on':''}"></i>`}return`<tr><td>${h.emoji} ${esc(h.name)}</td><td>${t(h.type==='bad'?'bad':'good')}</td><td>${c}/${dm} (${Math.round(c/dm*100)}%)</td><td><div class="st">${cells}</div></td></tr>`}).join(''),
+  jr=Object.keys(S.journal).filter(k=>k.startsWith(mo)&&S.journal[k]).sort(),
+  tr=x=>`<tr class="${x.done?'d':''}"><td>${x.done?'✓':'○'}</td><td>${esc(x.title)}${x.sub.length?`<br><small>${x.sub.map(s=>(s.d?'☑ ':'☐ ')+esc(s.t)).join(' · ')}</small>`:''}${x.note?`<br><small>${esc(x.note)}</small>`:''}</td><td>${x.tags.map(i=>tg(i)).filter(Boolean).map(g=>g.emoji+' '+esc(g.name)).join(', ')}</td><td>${t('p'+x.prio)}</td><td>${esc(x.status)}</td><td>${x.due?x.due.replace('T',' '):''}</td><td>${x.doneAt?lt(x.doneAt).slice(11,16):''}</td></tr>`;
+ return`<!doctype html><html lang="${S.set.lang}" dir="${rtl?'rtl':'ltr'}"><head><meta charset="utf-8"><title>${esc(title)}</title><style>
+ body{font:13px/1.55 ${FONTS[fontKey()][1]||'system-ui'};color:#1c1e2b;margin:24px}h1{margin:0 0 4px;font-size:24px}h2{margin:22px 0 6px;font-size:16px;border-bottom:2px solid ${S.set.ac};padding-bottom:3px}h3{margin:14px 0 4px;font-size:13px;color:#555}
+ .k{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}.k b{display:block;font-size:20px}.k div{border:1px solid #ddd;border-radius:10px;padding:6px 12px}
+ table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #e5e7ee;padding:4px 6px;vertical-align:top;text-align:start}th{color:#666;font-weight:600}tr.d td:nth-child(2){color:#777;text-decoration:line-through}small{color:#777}
+ .st{display:flex;gap:1px}.st i{width:6px;height:10px;background:#e5e7ee;border-radius:2px}.st i.on{background:${S.set.ac}}pre{white-space:pre-wrap;font:inherit;margin:2px 0}
+ tr,.j{break-inside:avoid}@page{margin:14mm}</style></head><body><h1>${esc(title)}</h1><small>${t('gen')}: ${lt(Date.now())}</small>
+ <div class="k"><div><small>${t('total')}</small><b>${ts.length}</b></div><div><small>${t('done')}</small><b>${dn}</b></div><div><small>${t('rate')}</small><b>${ts.length?Math.round(dn/ts.length*100):0}%</b></div><div><small>${t('journal')}</small><b>${jr.length}</b></div></div>
+ <h2>${t('cal')}</h2>${Object.keys(by).map(d=>`<h3>${d}${OC[d.slice(5)]?' · 🎉 '+ot(OC[d.slice(5)]):''}</h3><table><tr><th></th><th>${t('tsk')}</th><th>${t('tg2')}</th><th>${t('prod')}</th><th>${t('status')}</th><th>${t('due')}</th><th>✔</th></tr>${by[d].map(tr).join('')}</table>`).join('')||'<p>—</p>'}
+ <h2>${t('habits')}</h2>${hrs?`<table><tr><th>${t('hn')}</th><th>${t('ty')}</th><th>${t('cnt')}</th><th></th></tr>${hrs}</table>`:'<p>—</p>'}
+ <h2>${t('jr')}</h2>${jr.map(d=>`<div class="j"><h3>${d}</h3><pre>${esc(S.journal[d])}</pre></div>`).join('')||'<p>—</p>'}</body></html>`}
+function printHTML(html){const f=document.createElement('iframe');f.style.cssText='position:fixed;inset-inline-end:0;bottom:0;width:0;height:0;border:0';
+ f.onload=()=>setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch{}setTimeout(()=>f.remove(),120000)},350);f.srcdoc=html;document.body.appendChild(f)}
+
+/* ---------- settings card ---------- */
+const xCard=()=>{const s=S.set,np='Notification' in window?Notification.permission:'na',sw=!!navigator.serviceWorker?.controller||!!SWR,k=s.font||'auto',ok=/^https?:$/.test(location.protocol);
+ return`<div class="card"><b>📲 ${t('pwa')}</b><div class="btnrow">${standalone()?`<span class="chip" style="--c:#22c55e">${t('insd')}</span>`:DEFER?`<button class="on" data-a="inst">${t('inst')}</button>`:''}
+  <span class="chip" style="--c:${sw?'#22c55e':'#f59e0b'}">${t('offl')}${sw?' ✓':''}</span></div><small>${ok?t('insth'):t('offn')}</small></div>
+<div class="card"><b>🔔 ${t('notif')}</b><div class="btnrow">${np==='granted'?`<label class="chk"><input type="checkbox" data-c="nen"${s.notif?' checked':''}> ${t('nen')}</label><button data-a="ntest">${t('ntest')}</button>`:np==='denied'?`<span class="chip" style="--c:#ef4444">${t('nblk')}</span>`:np==='na'?`<span class="chip" style="--c:#ef4444">${t('nuns')}</span>`:`<button class="on" data-a="nreq">${t('nen')}</button>`}</div>
+  <div class="row"><small>${t('nlead')}</small><input type="number" min="0" max="1440" data-c="nlead" value="${s.lead??15}" style="width:80px"></div><small>${t('nhelp')}</small></div>
+<div class="card"><b>🎨 ${t('look')}</b>
+  <div class="row"><small>${t('pres')}</small>${PRESETS.map((q,i)=>`<button class="sw${s.ac===q[1]&&(s.g2||PRESETS[0][2])===q[2]?' on':''}" title="${q[0]}" data-a="preset" data-v="${i}" style="background:linear-gradient(135deg,${q[1]},${q[2].slice(0,7)})"></button>`).join('')}</div>
+  <div class="row"><small>${t('font')}</small><select data-c="font">${Object.keys(FONTS).map(f=>`<option value="${f}"${k===f?' selected':''}>${f==='auto'?t('fauto'):FONTS[f][0]}</option>`).join('')}</select></div>
+  <div class="row"><small>${t('fsz')}</small><input type="range" min="85" max="130" data-c="fs" value="${s.fs||100}"><small>${s.fs||100}%</small></div>
+  <div class="row"><small>${t('rad')}</small><input type="range" min="6" max="34" data-c="rad" value="${s.rad??22}"></div></div>
+<div class="card"><b>📤 ${t('expo')}</b><div class="btnrow"><button data-a="csvA">${t('csvA')}</button><button data-a="csvH">${t('csvH')}</button><button data-a="bkj">${t('bkj')}</button></div>
+  <div class="row"><small>${t('repm')}</small><input type="month" data-c="rm" value="${rmon()}"><button data-a="csvM">${t('csvM')}</button><button class="on" data-a="repp">${t('repp')}</button><button data-a="repd">${t('repd')}</button></div></div>`};
+{const _v=vSet;vSet=()=>_v()+xCard()}
+
+Object.assign(A,{
+ inst:async()=>{if(!DEFER)return;DEFER.prompt();try{await DEFER.userChoice}catch{}DEFER=null;render()},
+ nreq:async()=>{try{const r=await Notification.requestPermission();if(r==='granted'){S.set.notif=true;persist();notify('Joyl',t('ntt'),'welcome')}}catch{}render()},
+ ntest:()=>{const w=S.set.notif;S.set.notif=true;notify('Joyl',t('ntt'),'test');S.set.notif=w},
+ preset:e=>{const q=PRESETS[+e.dataset.v];S.set.ac=q[1];S.set.g2=q[2];S.set.g3=q[3];sv()},
+ csvA:()=>dl('flow-tasks-'+T0()+'.csv',csvOut(taskRows([...S.tasks])),'text/csv;charset=utf-8'),
+ csvM:()=>dl('flow-tasks-'+rmon()+'.csv',csvOut(taskRows(S.tasks.filter(x=>x.date.startsWith(rmon())))),'text/csv;charset=utf-8'),
+ csvH:()=>{const rows=[['date','habit','type','done']];for(const d of Object.keys(S.hlog).sort())for(const h of S.habits)if(h.id in(S.hlog[d]||{}))rows.push([d,h.name,h.type==='bad'?'bad':'good',S.hlog[d][h.id]?'yes':'no']);dl('flow-habits-'+T0()+'.csv',csvOut(rows),'text/csv;charset=utf-8')},
+ bkj:()=>dl('flow-backup-'+T0()+'.json',JSON.stringify(S),'application/json'),
+ repp:()=>printHTML(monthReport(rmon())),
+ repd:()=>dl('flow-report-'+rmon()+'.html',monthReport(rmon()),'text/html;charset=utf-8')});
+Object.assign(C,{
+ nen:e=>{S.set.notif=e.checked;sv()},nlead:e=>{S.set.lead=Math.max(0,Math.min(1440,+e.value||0));persist()},
+ font:e=>{S.set.font=e.value;sv()},fs:e=>{S.set.fs=+e.value;sv()},rad:e=>{S.set.rad=+e.value;sv()},rm:e=>{if(e.value)V.rm=e.value}});
+document.addEventListener('input',e=>{const c=e.target.dataset?.c,r=document.documentElement.style;if(c==='fs')r.setProperty('--fs',e.target.value/100);if(c==='rad')r.setProperty('--rad',e.target.value+'px')});
+
+/* ---------- deep links from the installed app's shortcuts (?tab=day|habits|journal|work|…) ---------- */
+{const q=new URLSearchParams(location.search).get('tab'),ok=['home','cal','day','work','habits','archive','graph','journal','set'];
+ if(q&&ok.includes(q)){const w=setInterval(()=>{if(V.ready){clearInterval(w);V.tab=q;V.date=T0();render()}},60);setTimeout(()=>clearInterval(w),8000)}}
+</script>
+<style>
+html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+body{min-height:100vh;min-height:100dvh}
+img,svg,video,canvas{max-width:100%}.card,.kt,.row{overflow-wrap:anywhere}
+main{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+input,select,textarea,button{max-width:100%}input[type=date],input[type=month],input[type=datetime-local]{min-width:0}
+@media(max-width:720px){.nav{left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right))}.row{gap:6px}}
+.jh{display:flex;align-items:center;gap:14px}.jh img{width:60px;height:60px;border-radius:16px;box-shadow:0 6px 24px color-mix(in srgb,var(--ac) 45%,transparent)}
+.jtabs{display:flex;gap:6px;overflow-x:auto;padding:4px 2px;scrollbar-width:none}.jtabs button{white-space:nowrap;border-radius:99px;display:flex;gap:6px;align-items:center}
+.jg{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;margin-top:10px}
+.jt{height:84px;border-radius:18px;padding:8px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;border:2px solid transparent;font-size:12px;font-weight:600}
+.jt i{width:26px;height:26px;border-radius:50%}.jt.on{border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 30%,transparent)}
+.jgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 14px}
+.kps{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin:10px 0}
+.kp{padding:12px;border-radius:18px;background:color-mix(in srgb,var(--ac) 10%,var(--cd));border:1px solid var(--ln)}.kp b{display:block;font-size:26px;font-weight:300;line-height:1.1}.kp small{font-size:12px}
+.hm{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px}.hm u{aspect-ratio:1;border-radius:4px;display:block;min-width:0}
+.hb{display:flex;align-items:center;gap:8px;margin:6px 0}.hb .bar{flex:1}
+</style><script>
+/* ===== Joyl v3 — themes, settings hub, insights, mobile fit, colour fix ===== */
+Object.assign(L,{jth:'Themes 2026|تم‌های ۲۰۲۶|2026テーマ',jdef:'Joyl|پیش‌فرض|標準',sA:'Look|ظاهر|外観',sS:'Sync|همگام‌سازی|同期',sN:'Alerts|اعلان‌ها|通知',sD:'Data|داده|データ',sP:'App|اپ|アプリ',
+y:'Year|سال|年',jbar:'Bars|ستونی|棒',jline:'Line|خطی|線',jbest:'Best|بهترین|ベスト',javg:'Avg/day|میانگین/روز|平均/日',jmix:'Priority mix|ترکیب اولویت|優先度',jtag:'By tag|بر اساس تگ|タグ別',
+jhm:'Consistency · 12 weeks|پیوستگی · ۱۲ هفته|継続 · 12週間',jhr:'Peak hours|ساعت‌های اوج|ピーク時間',jhab:'Habits|عادت‌ها|習慣',jfoc:'Focus 🍅|تمرکز 🍅|集中 🍅'});
+const PAL=[['Cloud Dancer','l','#efede8','#ffffff','#22222b','#77777f','#6c7cff','#93c5fd','#f9a8d4'],['Aurora','d','#070d1a','#111b30','#e6f0ff','#8da2c0','#2dd4bf','#818cf8','#e879f9'],
+['Mocha Mousse','d','#19120f','#261b16','#f3e7dd','#a8917f','#d4a373','#a0522d','#f4a261'],['Neon Violet','d','#0b0714','#17102a','#efe9ff','#9a8fc0','#a78bfa','#22d3ee','#f472b6'],
+['Matcha','d','#08150e','#112419','#e7f5e8','#86a58f','#84cc16','#14b8a6','#facc15'],['Sunset Peach','l','#fff0e6','#fffaf6','#3a2218','#9a7a6a','#fb7185','#fdba74','#fcd34d'],
+['Midnight Ocean','d','#06121d','#0d2234','#e3f2fd','#86a6bf','#38bdf8','#6366f1','#34d399'],['Rose Quartz','l','#fdf0f5','#ffffff','#3a1f2d','#9b7a8b','#ec4899','#f9a8d4','#c4b5fd'],
+['Cyber Lime','d','#0a0a0d','#16161b','#f4f4f5','#8b8b96','#bef264','#22d3ee','#a3e635'],['Graphite Gold','d','#121212','#1c1c1e','#f2f2f2','#8e8e93','#fbbf24','#94a3b8','#f87171']];
+/* colour fix: accent now drives every glow + theme-color; custom accent no longer keeps stale preset glows */
+function jPal(){const h=document.documentElement,s=S.set,q=PAL[s.pal],st=h.style,ks=['--bg','--cb','--tx','--mu','--ln'];
+ if(q){h.dataset.theme=q[1]==='l'?'light':'dark';[q[2],q[3],q[4],q[5],q[1]==='l'?'#0000001a':'#ffffff1f'].forEach((v,i)=>st.setProperty(ks[i],v))}else ks.forEach(k=>st.removeProperty(k));
+ if(!s.g2)st.setProperty('--g2','color-mix(in srgb,color-mix(in srgb,var(--ac),#22d3ee 55%) 40%,transparent)');
+ if(!s.g3)st.setProperty('--g3','color-mix(in srgb,color-mix(in srgb,var(--ac),#f472b6 55%) 40%,transparent)');
+ const m=document.querySelector('meta[name=theme-color]');if(m)m.content=q?q[2]:(s.ac||'#7c5cff')}
+{const o=render;render=function(){o();jPal()}}
+{const o=C.ac;C.ac=(e,k)=>{delete S.set.g2;delete S.set.g3;o(e,k)}}
+/* settings hub: re-uses every existing card, grouped into tabs */
+const jCat=h=>/data-a="(gconn|gnow|gdis|pick|unlink|grant)"|data-c="gcid"/.test(h)?'s':/data-a="(nreq|ntest)"|data-c="nlead"/.test(h)?'n':/data-a="(csvA|bkj|exp|imp)"/.test(h)?'d':/data-a="inst"/.test(h)?'p':'a';
+{const o=vSet;vSet=function(){const d=document.createElement('div');d.innerHTML=o();const c=V.sc||'a',s=S.set,
+ tabs=[['a','🎨'],['s','☁️'],['n','🔔'],['d','📦'],['p','📱']],
+ hero=`<div class="card jh"><img src="icon-192.png" alt=""><div style="flex:1"><b style="font-size:22px">Joyl</b><div class="mu">${esc(s.name||'')}${s.name?' · ':''}${S.tasks.length} ${t('total')} · ${S.tasks.filter(x=>x.done).length} ${t('done')}</div></div></div>`,
+ gal=c==='a'?`<div class="card"><b>✨ ${t('jth')}</b><div class="jg"><button class="jt${s.pal==null?' on':''}" data-a="pal" data-v="-1" style="background:linear-gradient(135deg,#f4f5fa,#0e1016)"><i style="background:linear-gradient(135deg,#7c5cff,#22d3ee)"></i><span style="color:#7c5cff">${t('jdef')}</span></button>${
+ PAL.map((q,i)=>`<button class="jt${s.pal===i?' on':''}" data-a="pal" data-v="${i}" style="background:linear-gradient(135deg,${q[2]},${q[3]})"><i style="background:linear-gradient(135deg,${q[6]},${q[7]})"></i><span style="color:${q[4]}">${q[0]}</span></button>`).join('')}</div></div>`:'';
+ return hero+`<div class="jtabs">${tabs.map(x=>`<button class="${c===x[0]?'on':''}" data-a="jsc" data-v="${x[0]}">${x[1]} ${t('s'+x[0].toUpperCase())}</button>`).join('')}</div>`+gal+[...d.children].filter(e=>jCat(e.outerHTML)===c).map(e=>e.outerHTML).join('')}}
+/* insights */
+function vGraph(){const r=V.gr||'w',gt=V.gt||'b',dd=new Date(V.date+'T00:00'),Y=dd.getFullYear(),M=dd.getMonth(),D=dd.getDate(),b=[];let lo,hi;
+ if(r==='d'){lo=hi=V.date;for(let h=0;h<24;h++)b.push([h,S.tasks.filter(x=>x.doneAt&&ymd(new Date(x.doneAt))===V.date&&new Date(x.doneAt).getHours()===h).length,0])}
+ else if(r==='y'){lo=Y+'-01-01';hi=Y+'-12-31';for(let i=0;i<12;i++){const a=S.tasks.filter(x=>x.date.startsWith(Y+'-'+p(i+1)));b.push([i+1,a.filter(x=>x.done).length,a.length])}}
+ else{const n=r==='w'?7:new Date(Y,M+1,0).getDate(),st=r==='w'?D-6:1;for(let i=0;i<n;i++){const x=new Date(Y,M,st+i),a=S.tasks.filter(y=>y.date===ymd(x));b.push([x.getDate(),a.filter(y=>y.done).length,a.length]);if(!i)lo=ymd(x);hi=ymd(x)}}
+ const R=S.tasks.filter(x=>x.date>=lo&&x.date<=hi),RD=R.filter(x=>x.done),dn=r==='d'?b.reduce((a,x)=>a+x[1],0):RD.length,tot=R.length,mx=Math.max(1,...b.map(x=>Math.max(x[1],x[2]))),
+ cm={};S.tasks.forEach(x=>{if(x.doneAt){const k=ymd(new Date(x.doneAt));cm[k]=(cm[k]||0)+1}});
+ let sk=0;for(let i=0;i<400;i++){const k=ymd(new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()-i));if(cm[k])sk++;else if(i)break}
+ const bi=b.reduce((a,x,i)=>x[1]>b[a][1]?i:a,0),pom=Object.keys(S.pom||{}).filter(k=>k>=lo&&k<=hi).reduce((a,k)=>a+S.pom[k],0),
+ gh=S.habits.filter(h=>h.type!=='bad'),hd=Object.keys(S.hlog).filter(k=>k>=lo&&k<=hi),hn=hd.reduce((a,k)=>a+gh.filter(h=>S.hlog[k][h.id]).length,0),
+ dayN=Math.max(1,Math.round((Math.min(new Date(hi+'T00:00'),new Date())-new Date(lo+'T00:00'))/864e5)+1),hp=gh.length?Math.min(100,Math.round(hn/(gh.length*dayN)*100)):0,
+ pts=b.map((x,i)=>[i*28+14,130-x[1]/mx*110]),st=b.length>16?2:1,
+ path=pts.map((q,i)=>i?`Q${pts[i-1][0]} ${pts[i-1][1]} ${(pts[i-1][0]+q[0])/2} ${(pts[i-1][1]+q[1])/2}`:`M${q[0]} ${q[1]}`).join('')+`L${pts.at(-1)[0]} ${pts.at(-1)[1]}`,
+ pr=[0,1,2,3].map(i=>R.filter(x=>x.prio===i).length),pt=Math.max(1,pr.reduce((a,x)=>a+x,0));let off=0;
+ const hrs=[...Array(24)].map((_,h)=>RD.filter(x=>x.doneAt&&new Date(x.doneAt).getHours()===h).length),hm=Math.max(1,...hrs),ph=hrs.indexOf(Math.max(...hrs)),
+ tgs=S.tags.map(g=>[g,RD.filter(x=>x.tags.includes(g.id)).length]).filter(x=>x[1]).sort((a,c)=>c[1]-a[1]).slice(0,6),tm=Math.max(1,...tgs.map(x=>x[1])),
+ cells=[...Array(84)].map((_,i)=>{const k=ymd(new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()-83+i)),n=cm[k]||0;return`<u title="${k}: ${n}" style="background:${n?`color-mix(in srgb,var(--ac) ${Math.min(100,18+n*20)}%,var(--ln))`:'var(--ln)'}"></u>`}).join(''),
+ kp=(v,l)=>`<div class="kp"><b>${v}</b><small class="mu">${l}</small></div>`;
+ return`<div class="card"><div class="row between"><button data-a="jgs" data-v="-1">‹</button><b>${lo}${lo!==hi?' → '+hi:''}</b><button data-a="jgs" data-v="1">›</button></div>
+<div class="row">${['d','w','m','y'].map(x=>`<button class="${r===x?'on':''}" data-a="gr" data-v="${x}">${t(x)}</button>`).join('')}<span class="gr"></span><input type="date" data-c="gd" value="${V.date}"></div>
+<div class="kps">${kp(dn,t('done'))}${kp(tot?Math.round(dn/tot*100)+'%':'—',t('rate'))}${kp('🔥 '+sk,t('streak'))}${kp(r==='d'?'—':(dn/b.length).toFixed(1),t('javg'))}${kp(b[bi][1]?b[bi][0]:'—',t('jbest'))}${kp(pom,t('jfoc'))}${kp(hp+'%',t('jhab'))}</div>
+<div class="row"><button class="${gt==='b'?'on':''}" data-a="jgt" data-v="b">▥ ${t('jbar')}</button><button class="${gt==='l'?'on':''}" data-a="jgt" data-v="l">∿ ${t('jline')}</button></div>
+<div style="overflow-x:auto"><svg viewBox="0 0 ${b.length*28} 156" style="width:100%;min-width:${Math.min(b.length*28,560)}px"><defs><linearGradient id="jg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--ac)"/><stop offset="1" style="stop-color:var(--ac);stop-opacity:.2"/></linearGradient></defs>
+${[0,.5,1].map(f=>`<line x1="0" x2="${b.length*28}" y1="${130-f*110}" y2="${130-f*110}" stroke="var(--ln)" stroke-dasharray="3 4"/>`).join('')}
+${gt==='b'?b.map((x,i)=>`<rect x="${i*28+4}" y="${130-x[2]/mx*110}" width="20" height="${x[2]/mx*110}" rx="6" fill="var(--ln)"/><rect x="${i*28+4}" y="${130-x[1]/mx*110}" width="20" height="${x[1]/mx*110}" rx="6" fill="url(#jg1)"><title>${x[1]}/${x[2]}</title></rect>`).join(''):`<path d="${path}L${pts.at(-1)[0]} 130L${pts[0][0]} 130Z" fill="url(#jg1)" opacity=".55"/><path d="${path}" fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round"/>${pts.map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="3.5" fill="var(--ac)"><title>${b[i][1]}</title></circle>`).join('')}`}
+${b.map((x,i)=>i%st?'':`<text x="${i*28+14}" y="148" font-size="10" text-anchor="middle" fill="var(--mu)">${x[0]}</text>`).join('')}</svg></div></div>
+<div class="jgrid"><div class="card"><b>${t('jmix')}</b><div class="row"><svg viewBox="0 0 100 100" width="130" height="130"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--ln)" stroke-width="14"/>${pr.map((n,i)=>{const l=n/pt*251.3,s=`<circle cx="50" cy="50" r="40" fill="none" stroke="${P[i][1]}" stroke-width="14" stroke-dasharray="${l} ${251.3-l}" stroke-dashoffset="${-off}" transform="rotate(-90 50 50)"/>`;off+=l;return s}).join('')}<text x="50" y="56" text-anchor="middle" font-size="18" fill="var(--tx)">${tot?Math.round(dn/tot*100):0}%</text></svg>
+<div style="flex:1">${pr.map((n,i)=>`<div class="row"><span class="pd" style="background:${P[i][1]}"></span><span class="gr">${t('p'+i)}</span><b>${n}</b></div>`).join('')}</div></div></div>
+<div class="card"><b>${t('jtag')}</b>${tgs.map(x=>`<div class="hb"><span style="min-width:84px">${x[0].emoji} ${esc(x[0].name)}</span><div class="bar"><i style="width:${x[1]/tm*100}%;background:${x[0].color}"></i></div><small>${x[1]}</small></div>`).join('')||'<div class="mu">—</div>'}</div>
+<div class="card"><b>${t('jhm')}</b><div class="hm" style="margin-top:8px">${cells}</div></div>
+<div class="card"><b>${t('jhr')}</b> <small class="mu">${hrs[ph]?ph+':00':''}</small><svg viewBox="0 0 240 64" style="width:100%">${hrs.map((n,h)=>`<rect x="${h*10+1}" y="${52-n/hm*48}" width="8" height="${n/hm*48+1}" rx="3" fill="${h===ph&&n?'var(--ac)':'var(--ln)'}"/>`).join('')}${[0,6,12,18,23].map(h=>`<text x="${h*10+5}" y="63" font-size="7" text-anchor="middle" fill="var(--mu)">${h}</text>`).join('')}</svg></div></div>`}
+Object.assign(A,{pal:e=>{const i=+e.dataset.v,q=PAL[i];if(!q){delete S.set.pal;S.set.ac='#7c5cff';delete S.set.g2;delete S.set.g3}else{S.set.pal=i;S.set.ac=q[6];S.set.g2=q[7]+'55';S.set.g3=q[8]+'55'}sv()},
+ jsc:e=>{V.sc=e.dataset.v;render()},jgt:e=>{V.gt=e.dataset.v;render()},
+ jgs:e=>{const v=+e.dataset.v,r=V.gr||'w',q=new Date(V.date+'T00:00');r==='d'?q.setDate(q.getDate()+v):r==='w'?q.setDate(q.getDate()+7*v):r==='m'?(q.setDate(1),q.setMonth(q.getMonth()+v)):q.setFullYear(q.getFullYear()+v);V.date=ymd(q);render()}});
+render();
 </script>
 </body></html>
