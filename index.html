@@ -10,7 +10,7 @@
 
 <style>
 *{box-sizing:border-box;margin:0}
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fa;--cb:#fff;--o:.8;--bl:18px;--cd:color-mix(in srgb,var(--cb) calc(var(--o)*100%),transparent);--tx:#1c1e2b;--mu:#7b8096;--ln:#0000001a;--ac:#7c5cff}
+:root{box-sizing:border-box;--bg:#f4f5fa;--cb:#fff;--o:.8;--bl:18px;--cd:color-mix(in srgb,var(--cb) calc(var(--o)*100%),transparent);--tx:#1c1e2b;--mu:#7b8096;--ln:#0000001a;--ac:#7c5cff}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1016;--cb:#181b25;--tx:#e8eaf3;--mu:#8a90a8;--ln:#ffffff1f}}
 :root[data-theme="dark"]{--bg:#0e1016;--cb:#181b25;--tx:#e8eaf3;--mu:#8a90a8;--ln:#ffffff1f}
@@ -561,7 +561,7 @@ document.addEventListener('input',e=>{const c=e.target.dataset?.c,r=document.doc
  if(q&&ok.includes(q)){const w=setInterval(()=>{if(V.ready){clearInterval(w);V.tab=q;V.date=T0();render()}},60);setTimeout(()=>clearInterval(w),8000)}}
 </script>
 <style>
-html,body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+html,body{max-width:100%;-webkit-text-size-adjust:100%;overscroll-behavior-y:none}
 body{min-height:100vh;min-height:100dvh}
 img,svg,video,canvas{max-width:100%}.card,.kt,.row{overflow-wrap:anywhere}
 main{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
@@ -598,10 +598,10 @@ function jPal(){const h=document.documentElement,s=S.set,q=PAL[s.pal],st=h.style
 /* settings hub: re-uses every existing card, grouped into tabs */
 const jCat=h=>/data-a="(gconn|gnow|gdis|pick|unlink|grant)"|data-c="gcid"/.test(h)?'s':/data-a="(nreq|ntest)"|data-c="nlead"/.test(h)?'n':/data-a="(csvA|bkj|exp|imp)"/.test(h)?'d':/data-a="inst"/.test(h)?'p':'a';
 {const o=vSet;vSet=function(){const d=document.createElement('div');d.innerHTML=o();const c=V.sc||'a',s=S.set,
- tabs=[['a','🎨'],['s','☁️'],['n','🔔'],['d','📦'],['p','📱']],
+ tabs=[['a','🎨'],['s','☁️'],['n','🔔'],['d','📦'],['p','📱'],['c','🎛️']],
  hero=`<div class="card jh"><img src="icon-192.png" alt=""><div style="flex:1"><b style="font-size:22px">Joyl</b><div class="mu">${esc(s.name||'')}${s.name?' · ':''}${S.tasks.length} ${t('total')} · ${S.tasks.filter(x=>x.done).length} ${t('done')}</div></div></div>`,
  gal=c==='a'?`<div class="card"><b>✨ ${t('jth')}</b><div class="jg"><button class="jt${s.pal==null?' on':''}" data-a="pal" data-v="-1" style="background:linear-gradient(135deg,#f4f5fa,#0e1016)"><i style="background:linear-gradient(135deg,#7c5cff,#22d3ee)"></i><span style="color:#7c5cff">${t('jdef')}</span></button>${
- PAL.map((q,i)=>`<button class="jt${s.pal===i?' on':''}" data-a="pal" data-v="${i}" style="background:linear-gradient(135deg,${q[2]},${q[3]})"><i style="background:linear-gradient(135deg,${q[6]},${q[7]})"></i><span style="color:${q[4]}">${q[0]}</span></button>`).join('')}</div></div>`:'';
+ PAL.map((q,i)=>`<button class="jt${s.pal===i?' on':''}" data-a="pal" data-v="${i}" style="background:${bgFor(i)}"><i style="background:linear-gradient(135deg,${q[6]},${q[7]})"></i><span style="color:${q[4]}">${q[0]}</span></button>`).join('')}</div></div>`:'';
  return hero+`<div class="jtabs">${tabs.map(x=>`<button class="${c===x[0]?'on':''}" data-a="jsc" data-v="${x[0]}">${x[1]} ${t('s'+x[0].toUpperCase())}</button>`).join('')}</div>`+gal+[...d.children].filter(e=>jCat(e.outerHTML)===c).map(e=>e.outerHTML).join('')}}
 /* insights */
 function vGraph(){const r=V.gr||'w',gt=V.gt||'b',dd=new Date(V.date+'T00:00'),Y=dd.getFullYear(),M=dd.getMonth(),D=dd.getDate(),b=[];let lo,hi;
@@ -637,6 +637,151 @@ ${b.map((x,i)=>i%st?'':`<text x="${i*28+14}" y="148" font-size="10" text-anchor=
 Object.assign(A,{pal:e=>{const i=+e.dataset.v,q=PAL[i];if(!q){delete S.set.pal;S.set.ac='#7c5cff';delete S.set.g2;delete S.set.g3}else{S.set.pal=i;S.set.ac=q[6];S.set.g2=q[7]+'55';S.set.g3=q[8]+'55'}sv()},
  jsc:e=>{V.sc=e.dataset.v;render()},jgt:e=>{V.gt=e.dataset.v;render()},
  jgs:e=>{const v=+e.dataset.v,r=V.gr||'w',q=new Date(V.date+'T00:00');r==='d'?q.setDate(q.getDate()+v):r==='w'?q.setDate(q.getDate()+7*v):r==='m'?(q.setDate(1),q.setMonth(q.getMonth()+v)):q.setFullYear(q.getFullYear()+v);V.date=ymd(q);render()}});
+render();
+</script>
+<style>
+/* ===== Joyl v4: scroll fix, smooth motion, adaptive workspace, themed backgrounds, customization ===== */
+:root{--sh:.13;--sp:1}
+body{overflow-x:clip;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+.card,.nav{box-shadow:inset 0 1px 0 #ffffff59,0 10px 34px rgb(0 0 0/var(--sh))}
+.card{padding:var(--pad,14px);margin:var(--gap,10px) 0;border-width:var(--bw,1px);animation:up .5s cubic-bezier(.2,.8,.2,1) both}
+.card:nth-child(2){animation-delay:30ms}.card:nth-child(3){animation-delay:60ms}.card:nth-child(4){animation-delay:90ms}.card:nth-child(n+5){animation-delay:120ms}
+input,select,textarea,.row>button:not(.ck):not(.x):not(.sw){border-radius:var(--btn,10px)}
+button{transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .25s,border-color .25s,box-shadow .25s}
+button:active{transform:scale(.93);transition-duration:.12s}
+@media(hover:none){button:hover{transform:none}}
+.nav .on{box-shadow:0 4px 14px color-mix(in srgb,var(--ac) 45%,transparent)}
+.nav button{transition:all .45s cubic-bezier(.34,1.56,.64,1)}
+html[data-os=ios] .nav,html[data-os=ios] .card{backdrop-filter:blur(var(--bl)) saturate(2.2);-webkit-backdrop-filter:blur(var(--bl)) saturate(2.2)}
+html[data-os=android] .nav .on{background:color-mix(in srgb,var(--ac) 26%,transparent);color:var(--tx);border-color:transparent;box-shadow:none}
+.kb,.nav,.jtabs,textarea{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#jbg{position:fixed;inset:-12%;z-index:-2;pointer-events:none;filter:brightness(var(--dim,1)) saturate(var(--sat,1));animation:jdrift calc(40s/var(--sp,1)) ease-in-out infinite alternate;will-change:transform}
+#jbg[data-k="1"]{animation-name:jsway}#jbg[data-k="2"]{animation-name:jpulse}
+#bgv{filter:brightness(var(--dim,1)) saturate(var(--sat,1))}
+html[data-jp] body{background-image:none!important}html[data-anim="0"] #jbg{animation:none}
+@keyframes jdrift{to{transform:translate3d(4%,3%,0) scale(1.08)}}@keyframes jsway{to{transform:rotate(3deg) scale(1.1)}}@keyframes jpulse{50%{transform:scale(1.12)}to{transform:scale(1.03) translate(-2%,2%)}}
+html.standalone main{padding-top:calc(14px + env(safe-area-inset-top,0px))}
+/* workspace: phone = one column per screen (snap), desktop = every column visible, full width */
+.kc{flex:0 0 calc(100vw - 56px);scroll-snap-stop:always}
+@media(min-width:721px){.kc{flex:0 0 min(320px,70vw)}}
+@media(min-width:900px){main.wide{max-width:none}.kb{display:grid;grid-template-columns:repeat(var(--nc,4),minmax(0,1fr));overflow:visible;scroll-snap-type:none}.kc{min-width:0}}
+html[data-nav=bottom] main{padding-bottom:110px}
+@media(min-width:721px){html[data-nav=bottom] .nav{position:fixed;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);left:50%;transform:translateX(-50%);margin:0}}
+.cu small{min-width:110px}.cu input[type=range]{flex:1;min-width:90px}.cu textarea{font:12px/1.4 ui-monospace,monospace;min-height:90px}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}
+</style>
+<script>
+/* ---- 1. mouse-wheel fix: vertical wheel over horizontal scrollers now scrolls the page ---- */
+document.addEventListener('wheel',e=>{if(e.ctrlKey||e.shiftKey||Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;const k=e.target.closest?.('.kb,.nav,.jtabs');if(k&&k.scrollHeight<=k.clientHeight+1){scrollBy(0,e.deltaY);e.preventDefault()}},{passive:false});
+{const h=document.documentElement,u=navigator.userAgent;h.dataset.os=/iPhone|iPad|iPod/.test(u)||(/Mac/.test(u)&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'desk'}
+/* ---- 2. perf: debounced persist (flushed on hide/close), haptics, view transitions ---- */
+{const o=persist;let t=0,w=0;persist=function(){w=1;clearTimeout(t);t=setTimeout(()=>{w=0;o()},120)};const fl=()=>{if(w){clearTimeout(t);w=0;o()}};addEventListener('pagehide',fl);document.addEventListener('visibilitychange',()=>document.hidden&&fl())}
+document.addEventListener('pointerdown',e=>{if(e.target.closest?.('.ck,.nav button,.jt,.sw'))navigator.vibrate?.(6)},{passive:true});
+const vt=f=>document.startViewTransition&&!matchMedia('(prefers-reduced-motion:reduce)').matches?document.startViewTransition(f):f();
+{const o=A.nav;A.nav=e=>vt(()=>o(e))}
+/* ---- 3. nav with hideable tabs ---- */
+nav=function(){const hd=S.set.cu?.hide||[];return'<nav class="nav">'+['home','cal','work','habits','archive','graph','journal','set'].filter(x=>x==='set'||!hd.includes(x)).map(x=>`<button class="${V.tab===x||(V.tab==='day'&&x==='cal')?'on':''}" data-a="nav" data-v="${x}">${ic(x)}<span>${t(x)}</span></button>`).join('')+'</nav>'};
+/* ---- 4. ten procedural 2026 backgrounds, one per theme (pure CSS: offline, light, animated) ---- */
+const BGF=[(a,b,c,z)=>`radial-gradient(55% 45% at 12% 8%,${a}66,#0000 70%),radial-gradient(45% 40% at 92% 22%,${b}77,#0000 70%),radial-gradient(60% 50% at 65% 100%,${c}77,#0000 70%),${z}`,
+(a,b,c,z)=>`linear-gradient(115deg,#0000 20%,${a}44 38%,${b}55 50%,${c}44 62%,#0000 80%),radial-gradient(70% 40% at 50% 0,${a}55,#0000 70%),${z}`,
+(a,b,c,z)=>`radial-gradient(80% 60% at 30% 20%,${a}44,#0000 70%),radial-gradient(60% 50% at 90% 90%,${c}44,#0000 70%),repeating-linear-gradient(45deg,#ffffff06 0 2px,#0000 2px 6px),${z}`,
+(a,b,c,z)=>`radial-gradient(50% 40% at 80% 10%,${b}66,#0000 70%),radial-gradient(60% 50% at 10% 90%,${c}66,#0000 70%),radial-gradient(circle at 50% 50%,${a}33,#0000 60%),${z}`,
+(a,b,c,z)=>`radial-gradient(circle,${a}22 1.5px,#0000 2px) 0 0/22px 22px,radial-gradient(60% 50% at 20% 0,${b}55,#0000 70%),radial-gradient(50% 50% at 90% 100%,${c}44,#0000 70%),${z}`,
+(a,b,c,z)=>`radial-gradient(40% 30% at 50% 78%,${c}cc,#0000 70%),linear-gradient(180deg,${z} 0%,${b}55 55%,${a}66 100%)`,
+(a,b,c,z)=>`repeating-radial-gradient(circle at 50% 120%,#0000 0 40px,${a}22 41px 42px),radial-gradient(70% 50% at 20% 0,${b}66,#0000 70%),radial-gradient(60% 40% at 90% 60%,${c}44,#0000 70%),${z}`,
+(a,b,c,z)=>`radial-gradient(30% 25% at 20% 25%,${a}55,#0000 70%),radial-gradient(28% 22% at 80% 15%,${b}88,#0000 70%),radial-gradient(35% 30% at 70% 80%,${c}66,#0000 70%),radial-gradient(25% 20% at 10% 90%,${b}66,#0000 70%),${z}`,
+(a,b,c,z)=>`linear-gradient(${a}1a 1px,#0000 1px) 0 0/36px 36px,linear-gradient(90deg,${a}1a 1px,#0000 1px) 0 0/36px 36px,radial-gradient(60% 50% at 50% 0,${b}55,#0000 70%),${z}`,
+(a,b,c,z)=>`conic-gradient(from 210deg at 70% 30%,#0000,${a}33,#0000 30%,${c}22,#0000 60%),radial-gradient(60% 50% at 20% 90%,${b}33,#0000 70%),${z}`];
+const bgFor=i=>{const q=PAL[i];return BGF[i](q[6],q[7],q[8],q[2])},TS=[[26,70,24],[24,45,28],[28,55,20],[20,40,30],[22,50,22],[30,65,24],[24,45,26],[32,70,22],[12,45,16],[18,55,20]]; /* [radius, glass %, blur] per theme */
+A.pal=e=>{const i=+e.dataset.v,q=PAL[i],s=S.set;if(!q){delete s.pal;s.ac='#7c5cff';delete s.g2;delete s.g3}else{s.pal=i;s.ac=q[6];s.g2=q[7]+'55';s.g3=q[8]+'55';[s.rad,s.op,s.bl]=TS[i];if(s.cu)['--g2','--g3','--bg','--cb','--tx','--mu'].forEach(k=>delete s.cu[k])}vt(sv)};
+/* ---- 5. extreme customization ---- */
+const CUV={'--pad':'px','--gap':'px','--btn':'px','--bw':'px','--sh':'n','--dim':'n','--sat':'n','--sp':'n'},CUD={'--pad':14,'--gap':10,'--btn':10,'--bw':1,'--sh':13,'--dim':100,'--sat':100,'--sp':100},
+CU=[['🎨 Colors|رنگ‌ها|色',[['--cb','color','Card|کارت|カード'],['--tx','color','Text|متن|文字'],['--mu','color','Muted|متن کم‌رنگ|薄い文字'],['--bg','color','Base background|پس‌زمینه پایه|背景色'],['--g2','color','Glow 2|درخشش ۲|グロー2'],['--g3','color','Glow 3|درخشش ۳|グロー3']]],
+['📐 Shape|فرم|形',[['--pad','range','Card padding|فاصله داخلی|余白',6,28],['--gap','range','Card spacing|فاصله کارت‌ها|間隔',2,24],['--btn','range','Button/input radius|گردی دکمه|ボタン角',0,24],['--bw','range','Border width|ضخامت خط|枠線',0,3]]],
+['🌫️ Depth & motion|عمق و حرکت|奥行きと動き',[['--sh','range','Shadow|سایه|影',0,60],['--dim','range','Background brightness|روشنایی پس‌زمینه|背景の明るさ',30,130],['--sat','range','Background saturation|اشباع پس‌زمینه|彩度',0,200],['--sp','range','Motion speed|سرعت حرکت|動きの速さ',20,300]]]],
+hx=v=>{v=(v||'').trim();return/^#[0-9a-f]{3}$/i.test(v)?'#'+[...v.slice(1)].map(c=>c+c).join(''):/^#[0-9a-f]{6}/i.test(v)?v.slice(0,7):'#888888'},
+cv=(k,v)=>CUV[k]==='px'?v+'px':CUV[k]==='n'?v/100:k==='--g2'||k==='--g3'?v+'66':v;
+function applyCU(){const h=document.documentElement,cu=S.set.cu||{};for(const k in CUV)cu[k]!=null?h.style.setProperty(k,cv(k,cu[k])):h.style.removeProperty(k);
+ for(const k of['--cb','--tx','--mu','--bg','--g2','--g3'])if(cu[k])h.style.setProperty(k,cv(k,cu[k]));
+ h.dataset.nav=cu.nav||'auto';h.dataset.anim=cu.noanim?'0':'1';let st=document.getElementById('jcss');if(!st){st=document.createElement('style');st.id='jcss';document.head.appendChild(st)}if(st.textContent!==(S.set.css||''))st.textContent=S.set.css||'';
+ let b=document.getElementById('jbg');if(!b){b=document.createElement('div');b.id='jbg';document.body.prepend(b)}const i=S.set.pal,on=i!=null&&!BG&&cu.nobg!==1,css=on?bgFor(i):'';
+ if(b.dataset.c!==css){b.dataset.c=css;b.style.background=css;b.dataset.k=on?i%3:'';b.style.display=on?'':'none'}h.toggleAttribute('data-jp',on);
+ const m=$('main');if(m){m.classList.toggle('wide',V.tab==='work');const kb=$('.kb');if(kb)kb.style.setProperty('--nc',S.set.st.length)}}
+{const o=render;render=function(){o();applyCU()}}
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset?.c==='cu'){const k=el.dataset.v;document.documentElement.style.setProperty(k,cv(k,el.type==='range'?+el.value:el.value))}});
+Object.assign(C,{cu:e=>{const cu=S.set.cu=S.set.cu||{};cu[e.dataset.v]=e.type==='range'?+e.value:e.value;sv()},
+cuhide:e=>{const cu=S.set.cu=S.set.cu||{},a=new Set(cu.hide||[]);e.checked?a.delete(e.dataset.v):a.add(e.dataset.v);cu.hide=[...a];sv()},
+cunav:e=>{(S.set.cu=S.set.cu||{}).nav=e.value;sv()},cuflag:e=>{(S.set.cu=S.set.cu||{})[e.dataset.v]=e.checked?1:0;sv()},cucss:e=>{S.set.css=e.value;sv()}});
+A.curst=()=>{delete S.set.cu;delete S.set.css;sv()};
+function cuPanel(){const s=S.set,cu=s.cu||{},cs=getComputedStyle(document.documentElement),L3=x=>ot(x);
+ return`<div class="card cu"><b>🎛️ ${L3('Customize everything|شخصی‌سازی کامل|フルカスタム')}</b>`+CU.map(([g,items])=>`<h5 style="margin:12px 0 4px;color:var(--mu)">${L3(g)}</h5>`+items.map(([k,ty,lb,a,b])=>`<div class="row"><small>${L3(lb)}</small>${ty==='color'?`<input type="color" data-c="cu" data-v="${k}" value="${hx(cu[k]||cs.getPropertyValue(k))}">`:`<input type="range" min="${a}" max="${b}" data-c="cu" data-v="${k}" value="${cu[k]??CUD[k]}">`}</div>`).join('')).join('')+
+ `<h5 style="margin:12px 0 4px;color:var(--mu)">🧭 ${L3('Layout|چیدمان|レイアウト')}</h5><div class="row"><small>${L3('Menu position|جای منو|メニュー位置')}</small><select data-c="cunav">${[['auto','Auto'],['bottom','Bottom|پایین|下']].map(x=>`<option value="${x[0]}"${(cu.nav||'auto')===x[0]?' selected':''}>${x[1].split('|')[LI[s.lang]]||x[1]}</option>`).join('')}</select></div>
+ <div class="row"><small>${L3('Show tabs|نمایش تب‌ها|表示タブ')}</small>${['home','cal','work','habits','archive','graph','journal'].map(x=>`<label class="chk"><input type="checkbox" data-c="cuhide" data-v="${x}"${(cu.hide||[]).includes(x)?'':' checked'}> ${t(x)}</label>`).join('')}</div>
+ <div class="row"><label class="chk"><input type="checkbox" data-c="cuflag" data-v="noanim"${cu.noanim?' checked':''}> ${L3('Freeze background animation|توقف انیمیشن پس‌زمینه|背景アニメ停止')}</label><label class="chk"><input type="checkbox" data-c="cuflag" data-v="nobg"${cu.nobg?' checked':''}> ${L3('Hide theme background|حذف پس‌زمینه تم|テーマ背景を隠す')}</label></div>
+ <h5 style="margin:12px 0 4px;color:var(--mu)">{ } CSS</h5><textarea data-c="cucss" placeholder=".card{ border-radius:40px }">${esc(s.css||'')}</textarea><div class="btnrow"><button data-a="curst">↺ ${L3('Reset customization|بازنشانی|リセット')}</button></div></div>`}
+{const o=vSet;vSet=function(){const h=o();return V.sc==='c'?h+cuPanel():h}}
+/* ---- 6. graph: tag filter + compare with previous period ---- */
+{const o=vGraph,rg=(r,d)=>{const x=new Date(d+'T00:00'),Y=x.getFullYear(),M=x.getMonth(),D=x.getDate();return r==='d'?[d,d]:r==='w'?[ymd(new Date(Y,M,D-6)),d]:r==='m'?[ymd(new Date(Y,M,1)),ymd(new Date(Y,M+1,0))]:[Y+'-01-01',Y+'-12-31']},
+ sh=(r,d,n)=>{const x=new Date(d+'T00:00');r==='d'?x.setDate(x.getDate()-n):r==='w'?x.setDate(x.getDate()-7*n):r==='m'?(x.setDate(1),x.setMonth(x.getMonth()-n)):x.setFullYear(x.getFullYear()-n);return ymd(x)},
+ st=(ts,[lo,hi])=>{const a=ts.filter(x=>x.date>=lo&&x.date<=hi),d=a.filter(x=>x.done).length;return[d,a.length]};
+ vGraph=function(){const all=S.tasks,r=V.gr||'w';if(V.gtag)S.tasks=all.filter(x=>x.tags.includes(V.gtag));let h;try{h=o()}finally{S.tasks=S.tasks}
+  const ts=V.gtag?all.filter(x=>x.tags.includes(V.gtag)):all,c=st(ts,rg(r,V.date)),p=st(ts,rg(r,sh(r,V.date,1))),pc=x=>x[1]?Math.round(x[0]/x[1]*100):0,df=c[0]-p[0];
+  return`<div class="card"><div class="row"><select data-c="jgtag"><option value="">${t('tags')}</option>${S.tags.map(g=>`<option value="${g.id}"${V.gtag===g.id?' selected':''}>${g.emoji} ${esc(g.name)}</option>`).join('')}</select><label class="chk"><input type="checkbox" data-c="jgcmp"${V.gcmp?' checked':''}> ${ot('Compare with previous|مقایسه با بازه قبل|前期間と比較')}</label></div>${V.gcmp?`<div class="row"><span class="chip" style="--c:#3b82f6">${ot('Now|الان|今期')} ${c[0]}/${c[1]} (${pc(c)}%)</span><span class="chip" style="--c:#94a3b8">${ot('Before|قبل|前期')} ${p[0]}/${p[1]} (${pc(p)}%)</span><span class="chip" style="--c:${df>=0?'#22c55e':'#ef4444'}">${df>=0?'▲':'▼'} ${Math.abs(df)}</span></div>`:''}</div>`+h}}
+Object.assign(C,{jgtag:e=>{V.gtag=e.value;render()},jgcmp:e=>{V.gcmp=e.checked;render()}});
+/* ---- 7. patch settings hub: custom tab + theme previews show their real background ---- */
+L.sC='Custom|شخصی|カスタム';
+render();
+</script>
+<style>
+.kt{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.kc.kdrop{outline:2px dashed var(--ac);outline-offset:-2px;background:color-mix(in srgb,var(--ac) 14%,transparent);transition:background .2s}
+.kt.kdim{opacity:.3}
+.kghost{position:fixed;z-index:99;pointer-events:none;margin:0;transform:scale(1.05) rotate(2deg);box-shadow:0 18px 40px #0005;transition:none;opacity:.96}
+.hg.edit>[data-w]{outline:2px dashed color-mix(in srgb,var(--ac) 60%,transparent);outline-offset:3px}
+.wbar{margin:-4px 0 8px}.wh{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;background:color-mix(in srgb,var(--ac) 16%,transparent);border-color:transparent;border-radius:99px}
+.wh:active{cursor:grabbing}.wdrag{transform:scale(1.03);box-shadow:0 20px 44px #0004;z-index:5;position:relative}
+</style>
+<script>
+/* ===== v5: touch drag for kanban + reorderable home widgets ===== */
+let KD=null,KT=null,lastDrag=0;
+{const o=render;render=function(){if(KD){KD.rq=1;return}o()}}
+addEventListener('click',e=>{if(Date.now()-lastDrag<450){e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener('touchstart',e=>{const kt=e.target.closest?.('.kt');if(!kt||e.target.closest('button')||e.touches.length!==1)return;
+ const f=e.touches[0];kt.draggable=false;KT={kt,x:f.clientX,y:f.clientY,t:setTimeout(()=>kStart(),300)}},{passive:true});
+function kStart(){const s=KT;if(!s)return;const r=s.kt.getBoundingClientRect(),g=s.kt.cloneNode(true);g.classList.add('kghost');g.style.cssText+=`left:${r.left}px;top:${r.top}px;width:${r.width}px`;
+ document.body.appendChild(g);s.kt.classList.add('kdim');const kb=$('.kb');if(kb)kb.style.scrollSnapType='none';navigator.vibrate?.(14);
+ KD={kt:s.kt,g,ox:s.x-r.left,oy:s.y-r.top,x:s.x,y:s.y,kb,col:null,
+  iv:setInterval(()=>{const d=KD;if(!d)return;const w=innerWidth,rtl=document.documentElement.dir==='rtl';
+   if(d.kb&&d.kb.scrollWidth>d.kb.clientWidth+2){const v=d.x<56?-16:d.x>w-56?16:0;if(v)d.kb.scrollLeft+=rtl?-v:v}
+   const vy=d.y<90?-14:d.y>innerHeight-110?14:0;if(vy)scrollBy(0,vy);kHit()},16)}}
+function kHit(){const d=KD;if(!d)return;const c=document.elementFromPoint(d.x,d.y)?.closest?.('.kc');if(c!==d.col){d.col?.classList.remove('kdrop');d.col=c;c?.classList.add('kdrop')}}
+document.addEventListener('touchmove',e=>{const f=e.touches[0];
+ if(KD){e.preventDefault();KD.x=f.clientX;KD.y=f.clientY;KD.g.style.left=f.clientX-KD.ox+'px';KD.g.style.top=f.clientY-KD.oy+'px';kHit();return}
+ if(KT&&Math.hypot(f.clientX-KT.x,f.clientY-KT.y)>9){clearTimeout(KT.t);KT=null}},{passive:false});
+function kEnd(ok){if(KT){clearTimeout(KT.t);KT=null}const d=KD;if(!d)return;KD=null;clearInterval(d.iv);d.g.remove();d.kt.classList.remove('kdim');d.col?.classList.remove('kdrop');if(d.kb)d.kb.style.scrollSnapType='';
+ lastDrag=Date.now();const k=task(d.kt.dataset.id);let ch=0;if(ok&&k&&d.col&&d.col.dataset.s!==k.status){setSt(k,d.col.dataset.s);ch=1;navigator.vibrate?.(8)}
+ if(ch)sv();else if(d.rq)render()}
+document.addEventListener('touchend',()=>kEnd(1));document.addEventListener('touchcancel',()=>kEnd(0));
+document.addEventListener('contextmenu',e=>{if(KD||e.target.closest?.('.kt')&&matchMedia('(pointer:coarse)').matches)e.preventDefault()});
+
+/* ---- home widgets: arrange mode (drag handle or ↑ ↓), order saved + synced in settings ---- */
+const WK=['clock','today','week','stats','dead','habs','occ','scr'],wOrder=()=>{const o=(S.set.wo||[]).filter(k=>WK.includes(k));return[...o,...WK.filter(k=>!o.includes(k))]};
+function wArrange(){const g=$('.hg');if(!g)return;const hw=S.set.hw||HW0,keys=WK.filter(k=>hw.includes(k)),o=wOrder();
+ [...g.children].forEach((c,i)=>{const k=keys[i];if(!k)return;c.dataset.w=k;c.style.order=o.indexOf(k);
+  if(V.edit&&!c.querySelector('.wbar'))c.insertAdjacentHTML('afterbegin',`<div class="row between wbar"><button class="wh" aria-label="drag">⠿ ${t(k)}</button><span><button class="x" data-a="wmv" data-k="${k}" data-v="-1">↑</button><button class="x" data-a="wmv" data-k="${k}" data-v="1">↓</button></span></div>`)});
+ g.classList.toggle('edit',!!V.edit)}
+{const o=vHome;vHome=function(){return`<div class="row between"><span></span><button class="${V.edit?'on':''}" data-a="wedit">${V.edit?'✓ '+ot('Done|تمام|完了'):'⠿ '+ot('Arrange widgets|چیدمان ویجت‌ها|並べ替え')}</button></div>`+o()}}
+{const o=render;render=function(){o();if(V.tab==='home')wArrange()}}
+A.wedit=()=>{V.edit=!V.edit;render()};
+A.wmv=e=>{const o=wOrder(),hw=S.set.hw||HW0,vis=o.filter(k=>hw.includes(k)),k=e.dataset.k,i=vis.indexOf(k),j=i+ +e.dataset.v;if(j<0||j>=vis.length)return;
+ const a=o.indexOf(k),b=o.indexOf(vis[j]);o.splice(a,1);o.splice(b,0,k);S.set.wo=o;sv()};
+let WD=null;
+document.addEventListener('pointerdown',e=>{const h=e.target.closest?.('.wh'),c=h?.closest('[data-w]');if(!c)return;WD={c,k:c.dataset.w,y:e.clientY};c.classList.add('wdrag');try{h.setPointerCapture(e.pointerId)}catch{}e.preventDefault()});
+document.addEventListener('pointermove',e=>{if(!WD)return;WD.y=e.clientY;const el=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('[data-w]');
+ if(el&&el!==WD.c){const o=wOrder(),a=o.indexOf(WD.k),b=o.indexOf(el.dataset.w);o.splice(a,1);o.splice(b,0,WD.k);S.set.wo=o;const hw=S.set.hw||HW0,keys=WK.filter(k=>hw.includes(k));document.querySelectorAll('.hg>[data-w]').forEach(c=>c.style.order=o.indexOf(c.dataset.w));navigator.vibrate?.(5)}
+ scrollBy(0,e.clientY<90?-12:e.clientY>innerHeight-110?12:0)});
+const wUp=()=>{if(!WD)return;WD.c.classList.remove('wdrag');WD=null;lastDrag=Date.now();sv()};
+document.addEventListener('pointerup',wUp);document.addEventListener('pointercancel',wUp);
 render();
 </script>
 </body></html>
